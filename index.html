@@ -21,6 +21,11 @@
     <script>
       const canvas = document.getElementById("myCanvas");
       const ctx = canvas.getContext("2d");
+      ctx.beginPath(); // Start a new path
+      ctx.rect(20, 40, 50, 50); // Define a rectangle at (20, 40) with width 50 and height 50
+      ctx.fillStyle = "#FF0000"; // Set the fill color to red
+      ctx.fill(); // Fill the rectangle with color
+      ctx.closePath(); // Close the path
     </script>
   </body>
 </html>
