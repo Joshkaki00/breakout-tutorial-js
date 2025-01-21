@@ -31,6 +31,11 @@
       ctx.fillStyle = "green"; // Set fill color to green
       ctx.fill();
       ctx.closePath();
+      ctx.beginPath();
+      ctx.rect(160, 10, 100, 40); // Rectangle at (160, 10), 100px wide and 40px tall
+      ctx.strokeStyle = "rgb(0 0 255 / 50%)"; // Semi-transparent blue stroke
+      ctx.stroke(); // Outline the rectangle
+      ctx.closePath();
     </script>
   </body>
 </html>
