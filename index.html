@@ -41,14 +41,7 @@
         y += dy;
       }
       
-      function startGame() {
-        setInterval(draw, 10);
-      }
-      
-      document.getElementById("runButton").addEventListener("click", function () {
-        startGame();
-        this.disabled = true;
-      });
+      setInterval(draw, 10);
       
     </script>
   </body>
