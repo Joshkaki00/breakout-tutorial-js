@@ -43,6 +43,11 @@
       ctx.stroke(); // Outline the rectangle
       ctx.closePath();
 
+      let x = canvas.width / 2;  // Start at canvas center horizontally
+      let y = canvas.height - 30; // Start near the bottom of the canvas
+      let dx = 2;   // Horizontal movement per frame
+      let dy = -2;  // Vertical movement per frame
+
       function draw() {
         ctx.beginPath();
         ctx.arc(50, 50, 10, 0, Math.PI * 2); // Circle with center at (50, 50), radius 10
