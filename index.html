@@ -26,27 +26,6 @@
       const dx = 2;
       const dy = -2;
 
-      // Red Square
-      ctx.beginPath(); // Start a new path
-      ctx.rect(20, 40, 50, 50); // Define a rectangle at (20, 40) with width 50 and height 50
-      ctx.fillStyle = "#FF0000"; // Set the fill color to red
-      ctx.fill(); // Fill the rectangle with color
-      ctx.closePath(); // Close the path
-
-      // Green circle
-      ctx.beginPath();
-      ctx.arc(240, 160, 20, 0, Math.PI * 2, false); // Center at (240, 160), radius 20, full circle
-      ctx.fillStyle = "green"; // Set fill color to green
-      ctx.fill();
-      ctx.closePath();
-
-      // Blue rectangle with semi-transparent stroke
-      ctx.beginPath();
-      ctx.rect(160, 10, 100, 40); // Rectangle at (160, 10), 100px wide and 40px tall
-      ctx.strokeStyle = "rgb(0 0 255 / 50%)"; // Semi-transparent blue stroke
-      ctx.stroke(); // Outline the rectangle
-      ctx.closePath();
-
       function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, 10, 0, Math.PI * 2);
@@ -57,7 +36,7 @@
       
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawBall(); // Call the drawBall function
+        drawBall();
         x += dx;
         y += dy;
       }
