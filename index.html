@@ -26,6 +26,11 @@
       ctx.fillStyle = "#FF0000"; // Set the fill color to red
       ctx.fill(); // Fill the rectangle with color
       ctx.closePath(); // Close the path
+      ctx.beginPath();
+      ctx.arc(240, 160, 20, 0, Math.PI * 2, false); // Center at (240, 160), radius 20, full circle
+      ctx.fillStyle = "green"; // Set fill color to green
+      ctx.fill();
+      ctx.closePath();
     </script>
   </body>
 </html>
