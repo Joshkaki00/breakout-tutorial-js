@@ -44,7 +44,11 @@
       ctx.closePath();
 
       function draw() {
-        // Code to draw the ball
+        ctx.beginPath();
+        ctx.arc(50, 50, 10, 0, Math.PI * 2); // Circle with center at (50, 50), radius 10
+        ctx.fillStyle = "#0095DD";           // Fill color is blue
+        ctx.fill();                          // Fills the circle with color
+        ctx.closePath();
       }
       setInterval(draw, 10); // Call draw every 10ms
     </script>
