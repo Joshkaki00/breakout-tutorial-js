@@ -21,6 +21,10 @@
     <script>
       const canvas = document.getElementById("myCanvas");
       const ctx = canvas.getContext("2d");
+      let x = canvas.width / 2;
+      let y = canvas.height - 30;
+      const dx = 2;
+      const dy = -2;
 
       // Red Square
       ctx.beginPath(); // Start a new path
@@ -42,11 +46,6 @@
       ctx.strokeStyle = "rgb(0 0 255 / 50%)"; // Semi-transparent blue stroke
       ctx.stroke(); // Outline the rectangle
       ctx.closePath();
-
-      let x = canvas.width / 2;  // Start at canvas center horizontally
-      let y = canvas.height - 30; // Start near the bottom of the canvas
-      let dx = 2;   // Horizontal movement per frame
-      let dy = -2;  // Vertical movement per frame
 
       function drawBall() {
         ctx.beginPath();
