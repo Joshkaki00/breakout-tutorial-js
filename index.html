@@ -62,7 +62,15 @@
         x += dx;
         y += dy;
       }
-      setInterval(draw, 10); // Call draw every 10ms
+      
+      function startGame() {
+        setInterval(draw, 10);
+      }
+      
+      document.getElementById("runButton").addEventListener("click", function () {
+        startGame();
+        this.disabled = true;
+      });
       
     </script>
   </body>
