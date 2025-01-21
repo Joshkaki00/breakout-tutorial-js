@@ -48,15 +48,19 @@
       let dx = 2;   // Horizontal movement per frame
       let dy = -2;  // Vertical movement per frame
 
-      function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clears the canvas
+      function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, 10, 0, Math.PI * 2);
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
+      }
+      
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBall(); // Call the drawBall function
         x += dx;
-        y += dy; // Updates ball's position for the next frame
+        y += dy;
       }
       setInterval(draw, 10); // Call draw every 10ms
       
