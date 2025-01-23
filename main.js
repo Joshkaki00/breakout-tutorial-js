@@ -1,5 +1,6 @@
-const canvas = document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d");
+/* eslint-disable no-undef */
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
 
 const ballRadius = 10;
 let x = canvas.width / 2;
@@ -7,19 +8,20 @@ let y = canvas.height - 30;
 let dx = 2;
 let dy = -2;
 
-let interval = 0;
+const interval = 0;
 
 const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
-const brickRowCount = 3;        // Number of brick rows
-const brickColumnCount = 5;     // Number of brick columns
-const brickWidth = 75;          // Width of each brick
-const brickHeight = 20;         // Height of each brick
-const brickPadding = 10;        // Space between bricks
-const brickOffsetTop = 30;      // Space between the top of the canvas and the first row of bricks
-const brickOffsetLeft = 30;     // Space between the left side of the canvas and the first column of bricks
+const brickRowCount = 3; // Number of brick rows
+const brickColumnCount = 5; // Number of brick columns
+const brickWidth = 75; // Width of each brick
+const brickHeight = 20; // Height of each brick
+const brickPadding = 10; // Space between bricks
+const brickOffsetTop = 30; // Space between the top of the canvas and the first row of bricks
+const brickOffsetLeft = 30; // Space between the left side of the canvas
+// and the first column of bricks
 
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
