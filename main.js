@@ -13,6 +13,14 @@ const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
+const brickRowCount = 3;        // Number of brick rows
+const brickColumnCount = 5;     // Number of brick columns
+const brickWidth = 75;          // Width of each brick
+const brickHeight = 20;         // Height of each brick
+const brickPadding = 10;        // Space between bricks
+const brickOffsetTop = 30;      // Space between the top of the canvas and the first row of bricks
+const brickOffsetLeft = 30;     // Space between the left side of the canvas and the first column of bricks
+
 let rightPressed = false;
 let leftPressed = false;
 
