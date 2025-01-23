@@ -7,6 +7,8 @@ let y = canvas.height - 30;
 let dx = 2;
 let dy = -2;
 
+let interval = 0;
+
 const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
@@ -50,23 +52,35 @@ function drawPaddle() {
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-  drawBall(); // Call the drawBall function
-  drawPaddle(); // Call the drawPaddle function
-  // Check for collisions and reverse direction if necessary
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+  drawBall();    // Draw the ball
+  drawPaddle();  // Draw the paddle
+
+  // Paddle movement logic
+  if (rightPressed) {
+    paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
+  } else if (leftPressed) {
+    paddleX = Math.max(paddleX - 7, 0);
+  }
+
+  // Ball collision logic
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-      dx = -dx;
+    dx = -dx; // Ball bounces off left/right walls
   }
-  if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
-      dy = -dy;
+  if (y + dy < ballRadius) {
+    dy = -dy; // Ball bounces off the top wall
+  } else if (y + dy > canvas.height - ballRadius) {
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy; // Ball bounces off the paddle
+    } else {
+      alert("GAME OVER");
+      document.location.reload();
+      clearInterval(interval); // Stop the game loop
+    }
   }
-  if (rightPressed && paddleX < canvas.width - paddleWidth) {
-      paddleX += 7;
-  } else if (leftPressed && paddleX > 0) {
-      paddleX -= 7;
-  }
-  x += dx;
-  y += dy;
+
+  x += dx; // Update ball's x position
+  y += dy; // Update ball's y position
 }
 
 setInterval(draw, 10);
