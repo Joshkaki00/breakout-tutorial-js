@@ -21,6 +21,14 @@ const brickPadding = 10;        // Space between bricks
 const brickOffsetTop = 30;      // Space between the top of the canvas and the first row of bricks
 const brickOffsetLeft = 30;     // Space between the left side of the canvas and the first column of bricks
 
+const bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  for (let r = 0; r < brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0 }; // Initialize each brick with default coordinates
+  }
+}
+
 let rightPressed = false;
 let leftPressed = false;
 
@@ -43,6 +51,22 @@ function keyUpHandler(e) {
   }
 }
 
+function drawBricks() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+      const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+      bricks[c][r].x = brickX; // Save the brick's position
+      bricks[c][r].y = brickY;
+      ctx.beginPath();
+      ctx.rect(brickX, brickY, brickWidth, brickHeight);
+      ctx.fillStyle = "#0095DD"; // Brick color
+      ctx.fill();
+      ctx.closePath();
+    }
+  }
+}
+
 function drawBall() {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
@@ -60,9 +84,10 @@ function drawPaddle() {
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-  drawBall();    // Draw the ball
-  drawPaddle();  // Draw the paddle
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+  drawBricks();    // Draw the brick field
+  drawBall();      // Draw the ball
+  drawPaddle();    // Draw the paddle
 
   // Paddle movement logic
   if (rightPressed) {
@@ -73,17 +98,17 @@ function draw() {
 
   // Ball collision logic
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-    dx = -dx; // Ball bounces off left/right walls
+    dx = -dx;
   }
   if (y + dy < ballRadius) {
-    dy = -dy; // Ball bounces off the top wall
+    dy = -dy;
   } else if (y + dy > canvas.height - ballRadius) {
     if (x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy; // Ball bounces off the paddle
+      dy = -dy;
     } else {
       alert("GAME OVER");
       document.location.reload();
-      clearInterval(interval); // Stop the game loop
+      clearInterval(interval);
     }
   }
 
