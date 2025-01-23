@@ -86,11 +86,31 @@ function drawPaddle() {
   ctx.closePath();
 }
 
+function collisionDetection() {
+  for (let c = 0; c < brickColumnCount; c += 1) {
+    for (let r = 0; r < brickRowCount; r += 1) {
+      const b = bricks[c][r]; // Get each brick object
+      if (b.status === 1) { // Only check active bricks
+        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+          dy = -dy; // Reverse direction upon collision
+          b.status = 0; // Mark brick as destroyed
+          score += 1; // Increment score
+          if (score === brickRowCount * brickColumnCount) {
+            alert('YOU WIN!');
+            document.location.reload();
+          }
+        }
+      }
+    }
+  }
+}
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
   drawBricks(); // Draw the brick field
   drawBall(); // Draw the ball
   drawPaddle(); // Draw the paddle
+  collisionDetection(); // Check for collisions
 
   // Paddle movement logic
   if (rightPressed) {
