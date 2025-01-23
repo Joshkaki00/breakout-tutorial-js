@@ -1,0 +1,25 @@
+{
+  "name": "break-out-tutorial",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joshkaki00/breakout-tutorial-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Joshkaki00/breakout-tutorial-js/issues"
+  },
+  "homepage": "https://github.com/Joshkaki00/breakout-tutorial-js#readme",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "globals": "^15.14.0"
+  }
+}
