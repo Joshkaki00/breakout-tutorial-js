@@ -43,23 +43,28 @@ function drawBall() {
 
 function drawPaddle() {
   ctx.beginPath();
-  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = "#0095DD";
+  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight); // Position at bottom of canvas
+  ctx.fillStyle = "#0095DD"; // Paddle color
   ctx.fill();
   ctx.closePath();
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBall();
-  drawPaddle();
-
-  if (rightPressed) {
-    paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
-  } else if (leftPressed) {
-    paddleX = Math.max(paddleX - 7, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+  drawBall(); // Call the drawBall function
+  drawPaddle(); // Call the drawPaddle function
+  // Check for collisions and reverse direction if necessary
+  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+      dx = -dx;
   }
-
+  if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+      dy = -dy;
+  }
+  if (rightPressed && paddleX < canvas.width - paddleWidth) {
+      paddleX += 7;
+  } else if (leftPressed && paddleX > 0) {
+      paddleX -= 7;
+  }
   x += dx;
   y += dy;
 }
