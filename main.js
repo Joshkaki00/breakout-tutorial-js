@@ -96,7 +96,17 @@ function collisionDetection() {
           b.status = 0; // Mark brick as destroyed
           score += 1; // Increment score
           if (score === brickRowCount * brickColumnCount) {
-            alert('YOU WIN!');
+            const winMessage = document.createElement('div');
+            winMessage.innerText = 'YOU WIN!';
+            winMessage.style.position = 'absolute';
+            winMessage.style.top = '50%';
+            winMessage.style.left = '50%';
+            winMessage.style.transform = 'translate(-50%, -50%)';
+            winMessage.style.backgroundColor = '#0095DD';
+            winMessage.style.color = '#fff';
+            winMessage.style.padding = '20px';
+            winMessage.style.borderRadius = '10px';
+            document.body.appendChild(winMessage);
             document.location.reload();
           }
         }
@@ -129,8 +139,17 @@ function draw() {
     if (x > paddleX && x < paddleX + paddleWidth) {
       dy = -dy;
     } else {
-      alert('GAME OVER');
-      document.location.reload();
+      const gameOverMessage = document.createElement('div');
+      gameOverMessage.innerText = 'GAME OVER';
+      gameOverMessage.style.position = 'absolute';
+      gameOverMessage.style.top = '50%';
+      gameOverMessage.style.left = '50%';
+      gameOverMessage.style.transform = 'translate(-50%, -50%)';
+      gameOverMessage.style.backgroundColor = '#FF0000';
+      gameOverMessage.style.color = '#fff';
+      gameOverMessage.style.padding = '20px';
+      gameOverMessage.style.borderRadius = '10px';
+      document.body.appendChild(gameOverMessage);
       clearInterval(interval);
     }
   }
