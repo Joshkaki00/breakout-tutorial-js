@@ -153,6 +153,7 @@ function draw() {
       gameOverMessage.style.borderRadius = '10px';
       document.body.appendChild(gameOverMessage);
       clearInterval(interval);
+      document.location.reload();
     }
   }
 
