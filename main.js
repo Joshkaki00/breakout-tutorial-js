@@ -152,8 +152,8 @@ function draw() {
       gameOverMessage.style.padding = '20px';
       gameOverMessage.style.borderRadius = '10px';
       document.body.appendChild(gameOverMessage);
-      clearInterval(interval);
       document.location.reload();
+      clearInterval(interval);
     }
   }
 
