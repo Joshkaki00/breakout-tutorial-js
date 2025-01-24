@@ -25,14 +25,14 @@ const bricks = [];
 for (let c = 0; c < brickColumnCount; c += 1) {
   bricks[c] = [];
   for (let r = 0; r < brickRowCount; r += 1) {
-    bricks[c][r] = { x: 0, y: 0 }; // Initialize each brick with default coordinates
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
+    // Initialize each brick with default coordinates and status
   }
 }
 
+let score = 0;
 let rightPressed = false;
 let leftPressed = false;
-
-// Duplicate functions removed
 
 function keyDownHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
@@ -56,15 +56,17 @@ document.addEventListener('keyup', keyUpHandler, false);
 function drawBricks() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
-      const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-      const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-      bricks[c][r].x = brickX; // Save the brick's position
-      bricks[c][r].y = brickY;
-      ctx.beginPath();
-      ctx.rect(brickX, brickY, brickWidth, brickHeight);
-      ctx.fillStyle = '#0095DD'; // Brick color
-      ctx.fill();
-      ctx.closePath();
+      if (bricks[c][r].status === 1) { // Only draw active bricks
+        const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+        const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = '#0095DD'; // Brick color
+        ctx.fill();
+        ctx.closePath();
+      }
     }
   }
 }
