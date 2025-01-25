@@ -8,7 +8,9 @@ let y = canvas.height - 30;
 
 // Generate a random starting angle for the ball
 const initialAngle = (Math.random() * Math.PI) / 4 + Math.PI / 4; // Between 45 and 135 degrees
-const speed = 2;
+const baseSpeed = 2;
+let speed = baseSpeed;
+const maxSpeed = 5; // Set maximum speed limit
 let dx = speed * Math.cos(initialAngle);
 let dy = -speed * Math.sin(initialAngle);
 
@@ -16,7 +18,7 @@ const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
-const brickRowCount = 6;
+const brickRowCount = 5;
 const brickColumnCount = 8;
 const brickColors = ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4', '#40E0D0'];
 
@@ -122,13 +124,18 @@ function collisionDetection() {
         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
           dy = -dy;
           b.status = 0;
-          score += brickPoints[r % brickPoints.length]; // Points per row
+          score += brickPoints[r % brickPoints.length];
+
+          // Gradually increase speed after breaking bricks, up to maxSpeed
+          speed = Math.min(maxSpeed, baseSpeed + Math.floor(score / 100) * 0.5);
+          dx = (dx > 0 ? 1 : -1) * speed * Math.cos(Math.atan2(dy, dx));
+          dy = (dy > 0 ? 1 : -1) * speed * Math.sin(Math.atan2(dy, dx));
         }
       }
     }
   }
   if (bricksRemaining === 0) {
-    const playAgain = confirm('YOU WIN, CONGRATULATIONS! Would you like to play again?');
+    const playAgain = confirm('Congratulations! You won! Do you want to play again?');
     if (playAgain) {
       document.location.reload();
     } else {
