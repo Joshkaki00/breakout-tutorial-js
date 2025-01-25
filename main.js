@@ -121,8 +121,21 @@ function collisionDetection() {
       const b = bricks[c][r];
       if (b.status === 1) {
         bricksRemaining += 1;
-        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-          dy = -dy;
+        // eslint-disable-next-line max-len
+        if (x + ballRadius > b.x && x - ballRadius < b.x + brickWidth && y + ballRadius > b.y && y - ballRadius < b.y + brickHeight) {
+          const overlapX = Math.min(x + ballRadius - b.x, b.x + brickWidth - (x - ballRadius));
+          const overlapY = Math.min(y + ballRadius - b.y, b.y + brickHeight - (y - ballRadius));
+
+          if (overlapX < overlapY) {
+            dx = -dx; // Reflect horizontally
+          } else if (overlapY < overlapX) {
+            dy = -dy; // Reflect vertically
+          } else {
+            // Corner case: Reflect both horizontally and vertically
+            dx = -dx;
+            dy = -dy;
+          }
+
           b.status = 0;
           score += brickPoints[r % brickPoints.length];
 
