@@ -101,29 +101,6 @@ function drawPaddle() {
   ctx.closePath();
 }
 
-function drawScore() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Score: ${score}`, 8, 20);
-}
-
-function drawLives() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
-}
-
-function showModal(message, callback) {
-  const modal = document.getElementById('modal');
-  const modalMessage = document.getElementById('modal-message');
-  modalMessage.textContent = message;
-  modal.style.display = 'block';
-  document.getElementById('modal-restart').onclick = () => {
-    modal.style.display = 'none';
-    callback();
-  };
-}
-
 function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
@@ -132,9 +109,10 @@ function collisionDetection() {
         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
           dy = -dy;
           b.status = 0;
-          score += brickPoints[r % brickPoints.length];
-          if (score === brickRowCount * brickColumnCount) {
-            showModal('YOU WIN, CONGRATULATIONS!', () => document.location.reload());
+          score += brickPoints[r % brickPoints.length]; // Add points based on row
+          if (score === brickRowCount * brickColumnCount * 10) {
+            alert('YOU WIN, CONGRATULATIONS!');
+            document.location.reload();
           }
         }
       }
@@ -142,8 +120,16 @@ function collisionDetection() {
   }
 }
 
+function drawBackground() {
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, '#FF5733');
+  gradient.addColorStop(1, '#3357FF');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBackground();
   drawBricks();
   drawBall();
   drawPaddle();
@@ -168,8 +154,15 @@ function draw() {
     } else {
       lives -= 1;
       if (!lives) {
-        showModal('GAME OVER', () => document.location.reload());
+        const playAgain = confirm('GAME OVER. Do you want to play again?');
+        if (playAgain) {
+          document.location.reload();
+        } else {
+          alert('Thank you for playing!');
+          return;
+        }
       } else {
+        // Reset ball and paddle positions
         x = canvas.width / 2;
         y = canvas.height - 30;
         dx = 2;
@@ -181,35 +174,10 @@ function draw() {
 
   x += dx;
   y += dy;
+
+  // Use requestAnimationFrame for rendering
   requestAnimationFrame(draw);
 }
-
-function keyDownHandler(e) {
-  if (e.key === 'Right' || e.key === 'ArrowRight') {
-    rightPressed = true;
-  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-    leftPressed = true;
-  }
-}
-
-function keyUpHandler(e) {
-  if (e.key === 'Right' || e.key === 'ArrowRight') {
-    rightPressed = false;
-  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-    leftPressed = false;
-  }
-}
-
-function mouseMoveHandler(e) {
-  const relativeX = e.clientX - canvas.offsetLeft;
-  if (relativeX > 0 && relativeX < canvas.width) {
-    paddleX = relativeX - paddleWidth / 2;
-  }
-}
-
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
-document.addEventListener('mousemove', mouseMoveHandler, false);
 
 // Start the game loop
 draw();
