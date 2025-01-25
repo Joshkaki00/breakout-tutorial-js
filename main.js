@@ -112,8 +112,13 @@ function collisionDetection() {
           b.status = 0;
           score += brickPoints[r % brickPoints.length]; // Add points based on row
           if (score === brickRowCount * brickColumnCount * 10) {
-            alert('YOU WIN, CONGRATULATIONS!');
-            document.location.reload();
+            const playAgain = confirm('YOU WIN, CONGRATULATIONS! Do you want to play again?');
+            if (playAgain) {
+              resetGame();
+            } else {
+              alert('Thank you for playing!');
+              return;
+            }
           }
         }
       }
@@ -134,6 +139,22 @@ function drawBackground() {
   gradient.addColorStop(1, '#3357FF');
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function resetGame() {
+  score = 0;
+  lives = 3;
+  x = canvas.width / 2;
+  y = canvas.height - 30;
+  dx = 2;
+  dy = -2;
+  paddleX = (canvas.width - paddleWidth) / 2;
+  for (let c = 0; c < brickColumnCount; c += 1) {
+    for (let r = 0; r < brickRowCount; r += 1) {
+      bricks[c][r].status = 1;
+    }
+  }
+  draw();
 }
 
 function draw() {
@@ -164,7 +185,7 @@ function draw() {
       if (!lives) {
         const playAgain = confirm('GAME OVER. Do you want to play again?');
         if (playAgain) {
-          document.location.reload();
+          resetGame();
         } else {
           alert('Thank you for playing!');
           return;
