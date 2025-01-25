@@ -29,6 +29,7 @@ for (let c = 0; c < brickColumnCount; c += 1) {
     bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
+const brickPoints = [10, 20, 30]; // Points per row
 
 let score = 0;
 let lives = 3;
@@ -108,7 +109,7 @@ function collisionDetection() {
         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
           dy = -dy;
           b.status = 0;
-          score += 1;
+          score += brickPoints[r % brickPoints.length]; // Add points based on row
           if (score === brickRowCount * brickColumnCount) {
             const playAgain = confirm('YOU WIN, CONGRATULATIONS! Do you want to play again?');
             if (playAgain) {
