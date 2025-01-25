@@ -36,6 +36,17 @@ let lives = 3;
 let rightPressed = false;
 let leftPressed = false;
 
+function showModal(message, callback) {
+  const modal = document.getElementById('modal');
+  const modalMessage = document.getElementById('modal-message');
+  modalMessage.textContent = message;
+  modal.style.display = 'block';
+  document.getElementById('modal-restart').onclick = () => {
+    modal.style.display = 'none';
+    callback();
+  };
+}
+
 function drawBackground() {
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
   gradient.addColorStop(0, '#FF5733');
@@ -63,7 +74,7 @@ function drawBricks() {
 }
 
 function drawBall() {
-  ctx.beginPath();
+  showModal('GAME OVER', () => document.location.reload());
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
   ctx.fillStyle = '#0095DD';
   ctx.fill();
@@ -90,32 +101,6 @@ function drawLives() {
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
-function showModal(message, callback) {
-  const modal = document.createElement('div');
-  modal.style.position = 'fixed';
-  modal.style.top = '50%';
-  modal.style.left = '50%';
-  modal.style.transform = 'translate(-50%, -50%)';
-  modal.style.backgroundColor = 'white';
-  modal.style.padding = '20px';
-  modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
-  modal.style.zIndex = '1000';
-
-  const text = document.createElement('p');
-  text.textContent = message;
-  modal.appendChild(text);
-
-  const button = document.createElement('button');
-  button.textContent = 'OK';
-  button.onclick = () => {
-    document.body.removeChild(modal);
-    callback();
-  };
-  modal.appendChild(button);
-
-  document.body.appendChild(modal);
-}
-
 function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
@@ -124,9 +109,9 @@ function collisionDetection() {
         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
           dy = -dy;
           b.status = 0;
-          score += brickPoints[r % brickPoints.length]; // Add points based on row
-          if (score === brickRowCount * brickColumnCount * 10) {
-            showModal('YOU WIN, CONGRATULATIONS! Do you want to play again?', resetGame);
+          score += brickPoints[r % brickPoints.length];
+          if (score === brickRowCount * brickColumnCount) {
+            showModal('YOU WIN, CONGRATULATIONS!', () => document.location.reload());
           }
         }
       }
@@ -134,23 +119,8 @@ function collisionDetection() {
   }
 }
 
-function resetGame() {
-  score = 0;
-  lives = 3;
-  x = canvas.width / 2;
-  y = canvas.height - 30;
-  dx = 2;
-  dy = -2;
-  paddleX = (canvas.width - paddleWidth) / 2;
-  for (let c = 0; c < brickColumnCount; c += 1) {
-    for (let r = 0; r < brickRowCount; r += 1) {
-      bricks[c][r].status = 1;
-    }
-  }
-  draw();
-}
-
 function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBackground();
   drawBricks();
   drawBall();
@@ -176,9 +146,8 @@ function draw() {
     } else {
       lives -= 1;
       if (!lives) {
-        showModal('GAME OVER. Do you want to play again?', resetGame);
+        showModal('GAME OVER', () => document.location.reload());
       } else {
-        // Reset ball and paddle positions
         x = canvas.width / 2;
         y = canvas.height - 30;
         dx = 2;
@@ -190,8 +159,6 @@ function draw() {
 
   x += dx;
   y += dy;
-
-  // Use requestAnimationFrame for rendering
   requestAnimationFrame(draw);
 }
 
