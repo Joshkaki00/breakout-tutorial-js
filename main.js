@@ -14,6 +14,7 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 
 const brickRowCount = 3;
 const brickColumnCount = 5;
+const brickColors = ['#FF5733', '#33FF57', '#3357FF']; // Colors for each row
 const brickWidth = 75;
 const brickHeight = 20;
 const brickPadding = 10;
@@ -74,7 +75,7 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = '#0095DD';
+        ctx.fillStyle = brickColors[r % brickColors.length];
         ctx.fill();
         ctx.closePath();
       }
