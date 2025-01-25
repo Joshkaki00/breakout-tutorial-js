@@ -110,14 +110,9 @@ function collisionDetection() {
           dy = -dy;
           b.status = 0;
           score += brickPoints[r % brickPoints.length]; // Add points based on row
-          if (score === brickRowCount * brickColumnCount) {
-            const playAgain = confirm('YOU WIN, CONGRATULATIONS! Do you want to play again?');
-            if (playAgain) {
-              document.location.reload();
-            } else {
-              alert('Thank you for playing!');
-              return;
-            }
+          if (score === brickRowCount * brickColumnCount * 10) {
+            alert('YOU WIN, CONGRATULATIONS!');
+            document.location.reload();
           }
         }
       }
