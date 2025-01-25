@@ -45,10 +45,10 @@ let rightPressed = false;
 let leftPressed = false;
 
 // Load sound effects
-const brickHitSound = new Audio('assets/sounds/brick-hit.mp3');
-const paddleHitSound = new Audio('assets/sounds/paddle-hit.mp3');
-const gameOverSound = new Audio('assets/sounds/game-over.mp3');
-const winSound = new Audio('assets/sounds/win.mp3');
+const brickHitSound = new Audio('brick-hit.mp3');
+const paddleHitSound = new Audio('paddle-hit.mp3');
+const gameOverSound = new Audio('game-over.mp3');
+const winSound = new Audio('win.mp3');
 
 function keyDownHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
@@ -175,11 +175,18 @@ function dynamicPaddleCollision() {
   if (y + ballRadius >= paddleTop && y + ballRadius <= paddleBottom && x >= paddleLeft && x <= paddleRight) {
     const relativeIntersectX = x - (paddleX + paddleWidth / 2);
     const normalizedRelativeIntersectX = relativeIntersectX / (paddleWidth / 2);
-    // eslint-disable-next-line max-len
-    const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3); // Max bounce angle: 60 degrees
 
-    dx = speed * Math.cos(bounceAngle);
-    dy = -Math.abs(speed * Math.sin(bounceAngle));
+    if (Math.abs(normalizedRelativeIntersectX) < 0.2) {
+      // Center hit, reflect directly vertically
+      dy = -Math.abs(dy);
+    } else {
+      // Side hit, calculate bounce angle
+      // eslint-disable-next-line max-len
+      const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3); // Max bounce angle: 60 degrees
+      dx = speed * Math.cos(bounceAngle);
+      dy = -Math.abs(speed * Math.sin(bounceAngle));
+    }
+
     paddleHitSound.play();
   }
 }
