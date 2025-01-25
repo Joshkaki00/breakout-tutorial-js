@@ -108,20 +108,13 @@ function collisionDetection() {
           b.status = 0;
           score += 1;
           if (score === brickRowCount * brickColumnCount) {
-            const winMessage = document.createElement('div');
-            winMessage.textContent = 'YOU WIN, CONGRATULATIONS!';
-            winMessage.style.position = 'absolute';
-            winMessage.style.top = '50%';
-            winMessage.style.left = '50%';
-            winMessage.style.transform = 'translate(-50%, -50%)';
-            winMessage.style.backgroundColor = '#0095DD';
-            winMessage.style.color = '#fff';
-            winMessage.style.padding = '20px';
-            winMessage.style.borderRadius = '10px';
-            document.body.appendChild(winMessage);
-            setTimeout(() => {
+            const playAgain = confirm('YOU WIN, CONGRATULATIONS! Do you want to play again?');
+            if (playAgain) {
               document.location.reload();
-            }, 5000);
+            } else {
+              alert('Thank you for playing!');
+              return;
+            }
           }
         }
       }
@@ -155,20 +148,13 @@ function draw() {
     } else {
       lives -= 1;
       if (!lives) {
-        const gameOverMessage = document.createElement('div');
-        gameOverMessage.textContent = 'GAME OVER';
-        gameOverMessage.style.position = 'absolute';
-        gameOverMessage.style.top = '50%';
-        gameOverMessage.style.left = '50%';
-        gameOverMessage.style.transform = 'translate(-50%, -50%)';
-        gameOverMessage.style.backgroundColor = '#0095DD';
-        gameOverMessage.style.color = '#fff';
-        gameOverMessage.style.padding = '20px';
-        gameOverMessage.style.borderRadius = '10px';
-        document.body.appendChild(gameOverMessage);
-        setTimeout(() => {
+        const playAgain = confirm('GAME OVER. Do you want to play again?');
+        if (playAgain) {
           document.location.reload();
-        }, 5000);
+        } else {
+          alert('Thank you for playing!');
+          return;
+        }
       } else {
         // Reset ball and paddle positions
         x = canvas.width / 2;
