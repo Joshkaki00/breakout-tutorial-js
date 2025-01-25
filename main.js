@@ -5,16 +5,20 @@ const ctx = canvas.getContext('2d');
 const ballRadius = 10;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
-let dx = 2;
-let dy = -2;
+
+// Generate a random starting angle for the ball
+const initialAngle = (Math.random() * Math.PI) / 4 + Math.PI / 4; // Between 45 and 135 degrees
+const speed = 2;
+let dx = speed * Math.cos(initialAngle);
+let dy = -speed * Math.sin(initialAngle);
 
 const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
-const brickRowCount = 5;
+const brickRowCount = 6;
 const brickColumnCount = 8;
-const brickColors = ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4', '#40E0D0']; // Row colors
+const brickColors = ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4', '#40E0D0'];
 
 const brickHeight = 20;
 const brickPadding = 10;
@@ -26,10 +30,12 @@ const bricks = [];
 for (let c = 0; c < brickColumnCount; c += 1) {
   bricks[c] = [];
   for (let r = 0; r < brickRowCount; r += 1) {
-    bricks[c][r] = { x: 0, y: 0, status: 1 };
+    const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+    const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+    bricks[c][r] = { x: brickX, y: brickY, status: 1 };
   }
 }
-const brickPoints = [10, 20, 30, 40, 50, 60]; // Points based on rows
+const brickPoints = [10, 20, 30, 40, 50, 60];
 
 let score = 0;
 let lives = 3;
@@ -79,13 +85,10 @@ function drawBricks() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
       if (bricks[c][r].status === 1) {
-        const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-        const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-        bricks[c][r].x = brickX;
-        bricks[c][r].y = brickY;
+        const brick = bricks[c][r];
         ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = brickColors[r % brickColors.length]; // Different color per row
+        ctx.rect(brick.x, brick.y, brickWidth, brickHeight);
+        ctx.fillStyle = brickColors[r % brickColors.length];
         ctx.fill();
         ctx.closePath();
       }
@@ -96,7 +99,7 @@ function drawBricks() {
 function drawBall() {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#FFD700'; // Gold ball for stretch challenge
+  ctx.fillStyle = '#FFD700';
   ctx.fill();
   ctx.closePath();
 }
@@ -104,7 +107,7 @@ function drawBall() {
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = '#40E0D0'; // Turquoise paddle for stretch challenge
+  ctx.fillStyle = '#40E0D0';
   ctx.fill();
   ctx.closePath();
 }
@@ -137,8 +140,8 @@ function collisionDetection() {
 function drawBackground() {
   // eslint-disable-next-line max-len
   const gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, canvas.width);
-  gradient.addColorStop(0, '#8A2BE2'); // Purple center
-  gradient.addColorStop(1, '#000000'); // Black edges
+  gradient.addColorStop(0, '#8A2BE2');
+  gradient.addColorStop(1, '#000000');
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
@@ -179,8 +182,9 @@ function draw() {
       } else {
         x = canvas.width / 2;
         y = canvas.height - 30;
-        dx = 2;
-        dy = -2;
+        const newAngle = (Math.random() * Math.PI) / 4 + Math.PI / 4;
+        dx = speed * Math.cos(newAngle);
+        dy = -speed * Math.sin(newAngle);
         paddleX = (canvas.width - paddleWidth) / 2;
       }
     }
@@ -192,5 +196,4 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
-// Start the game loop
 draw();
