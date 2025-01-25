@@ -108,8 +108,20 @@ function collisionDetection() {
           b.status = 0;
           score += 1;
           if (score === brickRowCount * brickColumnCount) {
-            alert('YOU WIN, CONGRATULATIONS!');
-            document.location.reload();
+            const winMessage = document.createElement('div');
+            winMessage.textContent = 'YOU WIN, CONGRATULATIONS!';
+            winMessage.style.position = 'absolute';
+            winMessage.style.top = '50%';
+            winMessage.style.left = '50%';
+            winMessage.style.transform = 'translate(-50%, -50%)';
+            winMessage.style.backgroundColor = '#0095DD';
+            winMessage.style.color = '#fff';
+            winMessage.style.padding = '20px';
+            winMessage.style.borderRadius = '10px';
+            document.body.appendChild(winMessage);
+            setTimeout(() => {
+              document.location.reload();
+            }, 3000);
           }
         }
       }
@@ -143,7 +155,20 @@ function draw() {
     } else {
       lives -= 1;
       if (!lives) {
-        alert('GAME OVER');
+        const gameOverMessage = document.createElement('div');
+        gameOverMessage.textContent = 'GAME OVER';
+        gameOverMessage.style.position = 'absolute';
+        gameOverMessage.style.top = '50%';
+        gameOverMessage.style.left = '50%';
+        gameOverMessage.style.transform = 'translate(-50%, -50%)';
+        gameOverMessage.style.backgroundColor = '#0095DD';
+        gameOverMessage.style.color = '#fff';
+        gameOverMessage.style.padding = '20px';
+        gameOverMessage.style.borderRadius = '10px';
+        document.body.appendChild(gameOverMessage);
+        setTimeout(() => {
+          document.location.reload();
+        }, 3000);
         document.location.reload();
       } else {
         // Reset ball and paddle positions
