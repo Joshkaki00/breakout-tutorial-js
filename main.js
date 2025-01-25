@@ -90,6 +90,32 @@ function drawLives() {
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
+function showModal(message, callback) {
+  const modal = document.createElement('div');
+  modal.style.position = 'fixed';
+  modal.style.top = '50%';
+  modal.style.left = '50%';
+  modal.style.transform = 'translate(-50%, -50%)';
+  modal.style.backgroundColor = 'white';
+  modal.style.padding = '20px';
+  modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+  modal.style.zIndex = '1000';
+
+  const text = document.createElement('p');
+  text.textContent = message;
+  modal.appendChild(text);
+
+  const button = document.createElement('button');
+  button.textContent = 'OK';
+  button.onclick = () => {
+    document.body.removeChild(modal);
+    callback();
+  };
+  modal.appendChild(button);
+
+  document.body.appendChild(modal);
+}
+
 function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
@@ -106,6 +132,22 @@ function collisionDetection() {
       }
     }
   }
+}
+
+function resetGame() {
+  score = 0;
+  lives = 3;
+  x = canvas.width / 2;
+  y = canvas.height - 30;
+  dx = 2;
+  dy = -2;
+  paddleX = (canvas.width - paddleWidth) / 2;
+  for (let c = 0; c < brickColumnCount; c += 1) {
+    for (let r = 0; r < brickRowCount; r += 1) {
+      bricks[c][r].status = 1;
+    }
+  }
+  draw();
 }
 
 function draw() {
@@ -151,48 +193,6 @@ function draw() {
 
   // Use requestAnimationFrame for rendering
   requestAnimationFrame(draw);
-}
-
-function showModal(message, callback) {
-  const modal = document.createElement('div');
-  modal.style.position = 'fixed';
-  modal.style.top = '50%';
-  modal.style.left = '50%';
-  modal.style.transform = 'translate(-50%, -50%)';
-  modal.style.backgroundColor = 'white';
-  modal.style.padding = '20px';
-  modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
-  modal.style.zIndex = '1000';
-
-  const text = document.createElement('p');
-  text.textContent = message;
-  modal.appendChild(text);
-
-  const button = document.createElement('button');
-  button.textContent = 'OK';
-  button.onclick = () => {
-    document.body.removeChild(modal);
-    callback();
-  };
-  modal.appendChild(button);
-
-  document.body.appendChild(modal);
-}
-
-function resetGame() {
-  score = 0;
-  lives = 3;
-  x = canvas.width / 2;
-  y = canvas.height - 30;
-  dx = 2;
-  dy = -2;
-  paddleX = (canvas.width - paddleWidth) / 2;
-  for (let c = 0; c < brickColumnCount; c += 1) {
-    for (let r = 0; r < brickRowCount; r += 1) {
-      bricks[c][r].status = 1;
-    }
-  }
-  draw();
 }
 
 function keyDownHandler(e) {
