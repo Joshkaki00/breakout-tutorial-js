@@ -54,6 +54,7 @@ function keyUpHandler(e) {
 
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
+document.addEventListener('mousemove', mouseMoveHandler, false);
 
 function drawScore() {
   ctx.font = '16px Arial';
@@ -117,6 +118,13 @@ function collisionDetection() {
         }
       }
     }
+  }
+}
+
+function mouseMoveHandler(e) {
+  const relativeX = e.clientX - canvas.offsetLeft;
+  if (relativeX > 0 && relativeX < canvas.width) {
+    paddleX = relativeX - paddleWidth / 2;
   }
 }
 
