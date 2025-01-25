@@ -45,10 +45,10 @@ let rightPressed = false;
 let leftPressed = false;
 
 // Load sound effects
-const brickHitSound = new Audio('brick-hit.mp3');
-const paddleHitSound = new Audio('paddle-hit.mp3');
-const gameOverSound = new Audio('game-over.mp3');
-const winSound = new Audio('win.mp3');
+const brickHitSound = new Audio('assets/sounds/brick-hit.mp3');
+const paddleHitSound = new Audio('assets/sounds/paddle-hit.mp3');
+const gameOverSound = new Audio('assets/sounds/game-over.mp3');
+const winSound = new Audio('assets/sounds/win.mp3');
 
 function keyDownHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
