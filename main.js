@@ -120,8 +120,16 @@ function collisionDetection() {
   }
 }
 
+function drawBackground() {
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, '#FF5733');
+  gradient.addColorStop(1, '#3357FF');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBackground();
   drawBricks();
   drawBall();
   drawPaddle();
