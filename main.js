@@ -169,7 +169,6 @@ function draw() {
         setTimeout(() => {
           document.location.reload();
         }, 5000);
-        document.location.reload();
       } else {
         // Reset ball and paddle positions
         x = canvas.width / 2;
