@@ -121,7 +121,7 @@ function collisionDetection() {
             document.body.appendChild(winMessage);
             setTimeout(() => {
               document.location.reload();
-            }, 3000);
+            }, 5000);
           }
         }
       }
@@ -168,7 +168,7 @@ function draw() {
         document.body.appendChild(gameOverMessage);
         setTimeout(() => {
           document.location.reload();
-        }, 3000);
+        }, 5000);
         document.location.reload();
       } else {
         // Reset ball and paddle positions
