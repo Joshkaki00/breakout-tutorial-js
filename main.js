@@ -44,6 +44,12 @@ let lives = 3;
 let rightPressed = false;
 let leftPressed = false;
 
+// Load sound effects
+const brickHitSound = new Audio('brick-hit.mp3');
+const paddleHitSound = new Audio('paddle-hit.mp3');
+const gameOverSound = new Audio('game-over.mp3');
+const winSound = new Audio('win.mp3');
+
 function keyDownHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
     rightPressed = true;
@@ -138,6 +144,7 @@ function collisionDetection() {
 
           b.status = 0;
           score += brickPoints[r % brickPoints.length];
+          brickHitSound.play();
 
           // Gradually increase speed after breaking bricks, up to maxSpeed
           speed = Math.min(maxSpeed, baseSpeed + Math.floor(score / 100) * 0.5);
@@ -148,12 +155,32 @@ function collisionDetection() {
     }
   }
   if (bricksRemaining === 0) {
+    winSound.play();
     const playAgain = confirm('Congratulations! You won! Do you want to play again?');
     if (playAgain) {
       document.location.reload();
     } else {
       alert('Thank you for playing!');
     }
+  }
+}
+
+function dynamicPaddleCollision() {
+  const paddleTop = canvas.height - paddleHeight;
+  const paddleBottom = paddleTop + paddleHeight;
+  const paddleLeft = paddleX;
+  const paddleRight = paddleX + paddleWidth;
+
+  // eslint-disable-next-line max-len
+  if (y + ballRadius >= paddleTop && y + ballRadius <= paddleBottom && x >= paddleLeft && x <= paddleRight) {
+    const relativeIntersectX = x - (paddleX + paddleWidth / 2);
+    const normalizedRelativeIntersectX = relativeIntersectX / (paddleWidth / 2);
+    // eslint-disable-next-line max-len
+    const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3); // Max bounce angle: 60 degrees
+
+    dx = speed * Math.cos(bounceAngle);
+    dy = -Math.abs(speed * Math.sin(bounceAngle));
+    paddleHitSound.play();
   }
 }
 
@@ -174,6 +201,7 @@ function draw() {
   drawScore();
   drawLives();
   collisionDetection();
+  dynamicPaddleCollision();
 
   if (rightPressed) {
     paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
@@ -192,6 +220,7 @@ function draw() {
     } else {
       lives -= 1;
       if (!lives) {
+        gameOverSound.play();
         const playAgain = confirm('GAME OVER. Do you want to play again?');
         if (playAgain) {
           document.location.reload();
