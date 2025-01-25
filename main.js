@@ -36,17 +36,6 @@ let lives = 3;
 let rightPressed = false;
 let leftPressed = false;
 
-function showModal(message, callback) {
-  const modal = document.getElementById('modal');
-  const modalMessage = document.getElementById('modal-message');
-  modalMessage.textContent = message;
-  modal.style.display = 'block';
-  document.getElementById('modal-restart').onclick = () => {
-    modal.style.display = 'none';
-    callback();
-  };
-}
-
 function drawBackground() {
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
   gradient.addColorStop(0, '#FF5733');
@@ -74,7 +63,7 @@ function drawBricks() {
 }
 
 function drawBall() {
-  showModal('GAME OVER', () => document.location.reload());
+  ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
   ctx.fillStyle = '#0095DD';
   ctx.fill();
@@ -99,6 +88,17 @@ function drawLives() {
   ctx.font = '16px Arial';
   ctx.fillStyle = '#0095DD';
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
+}
+
+function showModal(message, callback) {
+  const modal = document.getElementById('modal');
+  const modalMessage = document.getElementById('modal-message');
+  modalMessage.textContent = message;
+  modal.style.display = 'block';
+  document.getElementById('modal-restart').onclick = () => {
+    modal.style.display = 'none';
+    callback();
+  };
 }
 
 function collisionDetection() {
