@@ -12,15 +12,16 @@ const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
-const brickRowCount = 3;
-const brickColumnCount = 5;
+const brickRowCount = 6;
+const brickColumnCount = 8;
 const brickColors = ['#FF5733', '#33FF57', '#3357FF']; // Colors for each row
-const brickWidth = 75;
+
 const brickHeight = 20;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
-
+// eslint-disable-next-line max-len
+const brickWidth = (canvas.width - (brickOffsetLeft * 2) - ((brickColumnCount - 1) * brickPadding)) / brickColumnCount;
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c += 1) {
   bricks[c] = [];
