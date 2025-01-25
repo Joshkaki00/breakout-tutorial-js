@@ -12,7 +12,7 @@ const paddleHeight = 10;
 const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
-const brickRowCount = 6;
+const brickRowCount = 5;
 const brickColumnCount = 8;
 const brickColors = ['#FF5733', '#33FF57', '#3357FF']; // Colors for each row
 
