@@ -53,14 +53,14 @@ document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 
 function drawScore() {
-  ctx.font = "16px Arial";
-  ctx.fillStyle = "#0095DD";
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#0095DD';
   ctx.fillText(`Score: ${score}`, 8, 20);
 }
 
 function drawLives() {
-  ctx.font = "16px Arial";
-  ctx.fillStyle = "#0095DD";
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#0095DD';
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
@@ -108,7 +108,7 @@ function collisionDetection() {
           b.status = 0;
           score += 1;
           if (score === brickRowCount * brickColumnCount) {
-            alert("YOU WIN, CONGRATULATIONS!");
+            alert('YOU WIN, CONGRATULATIONS!');
             document.location.reload();
           }
         }
@@ -141,9 +141,9 @@ function draw() {
     if (x > paddleX && x < paddleX + paddleWidth) {
       dy = -dy;
     } else {
-      lives--;
+      lives -= 1;
       if (!lives) {
-        alert("GAME OVER");
+        alert('GAME OVER');
         document.location.reload();
       } else {
         // Reset ball and paddle positions
