@@ -48,7 +48,7 @@ let leftPressed = false;
 const brickHitSound = new Audio('assets/sounds/brick-hit.mp3');
 const paddleHitSound = new Audio('assets/sounds/paddle-hit.mp3');
 const gameOverSound = new Audio('assets/sounds/game-over.mp3');
-const ballMissSound = new Audio('assets/sounds/ball-miss.mp3'); // New sound for ball hitting the bottom
+const ballMissSound = new Audio('assets/sounds/ball-miss.mp3');
 
 function keyDownHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
