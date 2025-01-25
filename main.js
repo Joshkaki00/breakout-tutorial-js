@@ -14,7 +14,7 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 
 const brickRowCount = 5;
 const brickColumnCount = 8;
-const brickColors = ['#FF5733', '#33FF57', '#3357FF']; // Colors for each row
+const brickColors = ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4', '#40E0D0']; // Row colors
 
 const brickHeight = 20;
 const brickPadding = 10;
@@ -29,7 +29,7 @@ for (let c = 0; c < brickColumnCount; c += 1) {
     bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
-const brickPoints = [10, 20, 30]; // Points per row
+const brickPoints = [10, 20, 30, 40, 50, 60]; // Points based on rows
 
 let score = 0;
 let lives = 3;
@@ -85,7 +85,7 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = brickColors[r % brickColors.length];
+        ctx.fillStyle = brickColors[r % brickColors.length]; // Different color per row
         ctx.fill();
         ctx.closePath();
       }
@@ -96,7 +96,7 @@ function drawBricks() {
 function drawBall() {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#0095DD';
+  ctx.fillStyle = '#FFD700'; // Gold ball for stretch challenge
   ctx.fill();
   ctx.closePath();
 }
@@ -104,7 +104,7 @@ function drawBall() {
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = '#0095DD';
+  ctx.fillStyle = '#40E0D0'; // Turquoise paddle for stretch challenge
   ctx.fill();
   ctx.closePath();
 }
@@ -119,22 +119,26 @@ function collisionDetection() {
         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
           dy = -dy;
           b.status = 0;
-          score += brickPoints[r % brickPoints.length]; // Add points based on row
+          score += brickPoints[r % brickPoints.length]; // Points per row
         }
       }
     }
   }
-  // Check if all bricks are destroyed
   if (bricksRemaining === 0) {
-    alert('YOU WIN, CONGRATULATIONS!');
-    document.location.reload();
+    const playAgain = confirm('YOU WIN, CONGRATULATIONS! Would you like to play again?');
+    if (playAgain) {
+      document.location.reload();
+    } else {
+      alert('Thank you for playing!');
+    }
   }
 }
 
 function drawBackground() {
-  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  gradient.addColorStop(0, '#FF5733');
-  gradient.addColorStop(1, '#3357FF');
+  // eslint-disable-next-line max-len
+  const gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, canvas.width);
+  gradient.addColorStop(0, '#8A2BE2'); // Purple center
+  gradient.addColorStop(1, '#000000'); // Black edges
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
@@ -173,7 +177,6 @@ function draw() {
           return;
         }
       } else {
-        // Reset ball and paddle positions
         x = canvas.width / 2;
         y = canvas.height - 30;
         dx = 2;
@@ -186,7 +189,6 @@ function draw() {
   x += dx;
   y += dy;
 
-  // Use requestAnimationFrame for rendering
   requestAnimationFrame(draw);
 }
 
