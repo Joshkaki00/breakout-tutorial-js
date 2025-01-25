@@ -110,21 +110,24 @@ function drawPaddle() {
 }
 
 function collisionDetection() {
+  let bricksRemaining = 0;
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
       const b = bricks[c][r];
       if (b.status === 1) {
+        bricksRemaining += 1;
         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
           dy = -dy;
           b.status = 0;
           score += brickPoints[r % brickPoints.length]; // Add points based on row
-          if (score === brickRowCount * brickColumnCount * 10) {
-            alert('YOU WIN, CONGRATULATIONS!');
-            document.location.reload();
-          }
         }
       }
     }
+  }
+  // Check if all bricks are destroyed
+  if (bricksRemaining === 0) {
+    alert('YOU WIN, CONGRATULATIONS!');
+    document.location.reload();
   }
 }
 
