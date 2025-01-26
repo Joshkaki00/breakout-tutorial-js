@@ -161,6 +161,7 @@ function collisionDetection() {
   }
 
   if (bricksRemaining === 0) {
+    backgroundMusic.pause(); // Stop background music
     winSound.play(); // Play win sound effect
     const playAgain = confirm('YOU WIN! CONGRATULATIONS! Do you want to play again?');
     if (playAgain) {
@@ -234,6 +235,7 @@ function draw() {
       ballMissSound.play(); // Play sound when ball hits the bottom
       lives -= 1;
       if (!lives) {
+        backgroundMusic.pause(); // Stop background music
         gameOverSound.play();
         const playAgain = confirm('GAME OVER. Do you want to play again?');
         if (playAgain) {
