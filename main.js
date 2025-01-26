@@ -121,25 +121,23 @@ function drawPaddle() {
 }
 
 function collisionDetection() {
-  let bricksRemaining = 0;
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
       const b = bricks[c][r];
       if (b.status === 1) {
-        bricksRemaining += 1;
-        // eslint-disable-next-line max-len
-        if (x + ballRadius > b.x && x - ballRadius < b.x + brickWidth && y + ballRadius > b.y && y - ballRadius < b.y + brickHeight) {
+        if (
+          x + ballRadius > b.x
+          && x - ballRadius < b.x + brickWidth
+          && y + ballRadius > b.y
+          && y - ballRadius < b.y + brickHeight
+        ) {
           const overlapX = Math.min(x + ballRadius - b.x, b.x + brickWidth - (x - ballRadius));
           const overlapY = Math.min(y + ballRadius - b.y, b.y + brickHeight - (y - ballRadius));
 
-          if (overlapX < overlapY) {
-            dx = -dx; // Reflect horizontally
-          } else if (overlapY < overlapX) {
+          if (overlapX > overlapY) {
             dy = -dy; // Reflect vertically
           } else {
-            // Corner case: Reflect both horizontally and vertically
-            dx = -dx;
-            dy = -dy;
+            dx = -dx; // Reflect horizontally
           }
 
           b.status = 0;
@@ -152,15 +150,6 @@ function collisionDetection() {
           dy = (dy > 0 ? 1 : -1) * speed * Math.sin(Math.atan2(dy, dx));
         }
       }
-    }
-  }
-  if (bricksRemaining === 0) {
-    winSound.play();
-    const playAgain = confirm('Congratulations! You won! Do you want to play again?');
-    if (playAgain) {
-      document.location.reload();
-    } else {
-      alert('Thank you for playing!');
     }
   }
 }
