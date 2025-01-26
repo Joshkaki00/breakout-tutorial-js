@@ -49,6 +49,7 @@ const brickHitSound = new Audio('assets/sounds/brick-hit.mp3');
 const paddleHitSound = new Audio('assets/sounds/paddle-hit.mp3');
 const gameOverSound = new Audio('assets/sounds/game-over.mp3');
 const ballMissSound = new Audio('assets/sounds/ball-miss.mp3');
+const winSound = new Audio('assets/sounds/win.mp3');
 
 function keyDownHandler(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
@@ -121,10 +122,12 @@ function drawPaddle() {
 }
 
 function collisionDetection() {
+  let bricksRemaining = 0;
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
       const b = bricks[c][r];
       if (b.status === 1) {
+        bricksRemaining += 1;
         if (
           x + ballRadius > b.x
           && x - ballRadius < b.x + brickWidth
@@ -150,6 +153,16 @@ function collisionDetection() {
           dy = (dy > 0 ? 1 : -1) * speed * Math.sin(Math.atan2(dy, dx));
         }
       }
+    }
+  }
+
+  if (bricksRemaining === 0) {
+    winSound.play(); // Play win sound effect
+    const playAgain = confirm('YOU WIN! CONGRATULATIONS! Do you want to play again?');
+    if (playAgain) {
+      document.location.reload();
+    } else {
+      alert('Thank you for playing!');
     }
   }
 }
