@@ -52,7 +52,7 @@ const ballMissSound = new Audio('assets/sounds/ball-miss.mp3');
 const winSound = new Audio('assets/sounds/win.mp3');
 const backgroundMusic = new Audio('assets/sounds/background-music.mp3');
 backgroundMusic.loop = true;
-backgroundMusic.volume = 0.8; // Adjust volume as needed
+backgroundMusic.volume = 0.5; // Adjust volume as needed
 backgroundMusic.play();
 
 function keyDownHandler(e) {
