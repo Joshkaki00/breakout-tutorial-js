@@ -37,7 +37,7 @@ for (let c = 0; c < brickColumnCount; c += 1) {
     bricks[c][r] = { x: brickX, y: brickY, status: 1 };
   }
 }
-const brickPoints = [10, 20, 30, 40, 50, 60];
+const brickPoints = [10, 20, 30, 40, 50];
 
 let score = 0;
 let lives = 3;
