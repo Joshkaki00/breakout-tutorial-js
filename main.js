@@ -1,3 +1,4 @@
+import Ball from './Ball.js';
 /* eslint-disable no-undef */
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
