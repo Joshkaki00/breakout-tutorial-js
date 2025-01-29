@@ -32,6 +32,7 @@ export default class Paddle {
     const relativeX = e.clientX - this.canvas.offsetLeft;
     if (relativeX > 0 && relativeX < this.canvas.width) {
       this.x = relativeX - this.width / 2;
+      console.log(`Mouse Move: Paddle X Position = ${this.x}`);
     }
   }
 
@@ -41,9 +42,11 @@ export default class Paddle {
     } else if (this.leftPressed) {
       this.x = Math.max(this.x - this.speed, 0);
     }
+    console.log(`Paddle Move: Current Position = ${this.x}`);
   }
 
   render(ctx) {
+    console.log(`Paddle Render: Position (${this.x}, ${this.y}), Size (${this.width}x${this.height})`);
     ctx.beginPath();
     ctx.rect(this.x, this.y, this.width, this.height);
     ctx.fillStyle = this.color;
