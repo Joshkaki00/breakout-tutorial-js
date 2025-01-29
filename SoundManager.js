@@ -1,6 +1,3 @@
-import { AudioContext } from 'node-web-audio-api';
-const Audio = global.Audio || AudioContext;
-
 export default class SoundManager {
   constructor() {
     this.sounds = {
