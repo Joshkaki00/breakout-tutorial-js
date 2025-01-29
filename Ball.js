@@ -10,20 +10,13 @@ export default class Ball {
     this.maxSpeed = maxSpeed;
   }
 
-  move(canvas) {
-    // Bounce off walls
-    if (this.x + this.dx > canvas.width - this.radius || this.x + this.dx < this.radius) {
-      this.dx = -this.dx;
-    }
-    if (this.y + this.dy > canvas.height - this.radius || this.y + this.dy < this.radius) {
-      this.dy = -this.dy;
-    }
+  move() {
     this.x += this.dx;
     this.y += this.dy;
   }
 
   increaseSpeed(score) {
-    const speedFactor = 1 + score * 0.010; // Gradual increase over time
+    const speedFactor = 1 + score * 0.001; // Gradual increase over time
     const newSpeed = Math.min(this.maxSpeed, this.baseSpeed * speedFactor);
     const angle = Math.atan2(this.dy, this.dx);
     this.dx = newSpeed * Math.cos(angle);
