@@ -26,12 +26,12 @@ const brickWidth = (canvas.width - (brickOffsetLeft * 2) - (brickColumnCount - 1
 const brickHeight = 20;
 
 // eslint-disable-next-line max-len
-const bricks = Array.from({ length: brickColumnCount }, (outerIndex) => Array.from({ length: brickRowCount }, (innerIndex) => new Brick(
-  outerIndex * (brickWidth + brickPadding) + brickOffsetLeft,
-  innerIndex * (brickHeight + brickPadding) + brickOffsetTop,
+const bricks = Array.from({ length: brickColumnCount }, (_, c) => Array.from({ length: brickRowCount }, (_, r) => new Brick(
+  c * (brickWidth + brickPadding) + brickOffsetLeft,
+  r * (brickHeight + brickPadding) + brickOffsetTop,
   brickWidth,
   brickHeight,
-  ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4'][innerIndex % 5],
+  ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4'][r % 5],
 )));
 
 const gameManager = new GameManager(ball, paddle, bricks, score, lives, canvas);
