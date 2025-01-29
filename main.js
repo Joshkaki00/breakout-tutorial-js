@@ -64,7 +64,7 @@ function gameLoop() {
   if (ball.y + ball.dy > canvas.height - ball.radius) {
     lives.loseLife();
     if (lives.lives === 0) {
-      alert("Game Over");
+      alert('Game Over');
       document.location.reload(); // Reset the game
     } else {
       // Reset ball and paddle
