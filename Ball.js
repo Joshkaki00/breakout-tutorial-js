@@ -18,7 +18,6 @@ export default class Ball {
     if (this.y + this.dy > canvas.height - this.radius || this.y + this.dy < this.radius) {
       this.dy = -this.dy;
     }
-
     this.x += this.dx;
     this.y += this.dy;
   }
