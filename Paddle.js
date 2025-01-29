@@ -6,6 +6,7 @@ export default class Paddle {
     this.height = height;
     this.canvas = canvas;
     this.speed = 7;
+    this.color = color;
     this.rightPressed = false;
     this.leftPressed = false;
     this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
@@ -44,8 +45,7 @@ export default class Paddle {
 
   render(ctx) {
     ctx.beginPath();
-    ctx.rect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = '#40E0D0';
+    ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
   }
