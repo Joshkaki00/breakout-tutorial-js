@@ -1,4 +1,4 @@
-import { SoundManager } from './SoundManager.js';
+import SoundManager from './SoundManager.js';
 export default class GameManager {
   constructor(ball, paddle, bricks, score, lives, canvas) {
     this.ball = ball;
