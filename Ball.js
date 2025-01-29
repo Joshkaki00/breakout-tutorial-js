@@ -23,9 +23,6 @@ export default class Ball {
     this.dy = newSpeed * Math.sin(angle);
   }
 
-  /**
-   * Improved paddle collision based on the previous procedural version
-   */
   bounceOffPaddle(paddle) {
     const paddleTop = paddle.y;
     const paddleBottom = paddle.y + paddle.height;
@@ -33,10 +30,10 @@ export default class Ball {
     const paddleRight = paddle.x + paddle.width;
 
     if (
-      this.y + this.radius >= paddleTop &&
-      this.y + this.radius <= paddleBottom &&
-      this.x >= paddleLeft &&
-      this.x <= paddleRight
+      this.y + this.radius >= paddleTop
+      && this.y + this.radius <= paddleBottom
+      && this.x >= paddleLeft
+      && this.x <= paddleRight
     ) {
       const relativeIntersectX = this.x - (paddle.x + paddle.width / 2);
       const normalizedRelativeIntersectX = relativeIntersectX / (paddle.width / 2);
