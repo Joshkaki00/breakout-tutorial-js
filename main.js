@@ -1,265 +1,111 @@
 import Ball from './Ball.js';
+import Paddle from './Paddle.js';
+import Background from './Background.js';
+import Score from './Score.js';
+import Lives from './Lives.js';
+import Brick from './Brick.js';
+
 /* eslint-disable no-undef */
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 
-const ballRadius = 10;
-let x = canvas.width / 2;
-let y = canvas.height - 30;
-
-// Generate a random starting angle for the ball
-const initialAngle = (Math.random() * Math.PI) / 4 + Math.PI / 4; // Between 45 and 135 degrees
-const baseSpeed = 2;
-let speed = baseSpeed;
-const maxSpeed = 5; // Set maximum speed limit
-let dx = speed * Math.cos(initialAngle);
-let dy = -speed * Math.sin(initialAngle);
-
-const paddleHeight = 10;
-const paddleWidth = 75;
-let paddleX = (canvas.width - paddleWidth) / 2;
+const ball = new Ball(canvas.width / 2, canvas.height - 30, 10, 2, -2);
+const paddle = new Paddle((canvas.width - 75) / 2, canvas.height - 10, 75, 10);
+const background = new Background('#8A2BE2', '#000000');
+const score = new Score(8, 20);
+const lives = new Lives(canvas.width - 65, 20);
 
 const brickRowCount = 5;
 const brickColumnCount = 8;
-const brickColors = ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4', '#40E0D0'];
-
-const brickHeight = 20;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 // eslint-disable-next-line max-len
-const brickWidth = (canvas.width - (brickOffsetLeft * 2) - ((brickColumnCount - 1) * brickPadding)) / brickColumnCount;
+const brickWidth = (canvas.width - (brickOffsetLeft * 2) - (brickColumnCount - 1) * brickPadding) / brickColumnCount;
+const brickHeight = 20;
+
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c += 1) {
   bricks[c] = [];
   for (let r = 0; r < brickRowCount; r += 1) {
     const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
     const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-    bricks[c][r] = { x: brickX, y: brickY, status: 1 };
+    const brickColor = ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4'][
+      r % 5
+    ];
+    bricks[c][r] = new Brick(brickX, brickY, brickWidth, brickHeight, brickColor);
   }
-}
-const brickPoints = [10, 20, 30, 40, 50];
-
-let score = 0;
-let lives = 3;
-let rightPressed = false;
-let leftPressed = false;
-
-// Load sound effects
-const brickHitSound = new Audio('assets/sounds/brick-hit.mp3');
-const paddleHitSound = new Audio('assets/sounds/paddle-hit.mp3');
-const gameOverSound = new Audio('assets/sounds/game-over.mp3');
-const ballMissSound = new Audio('assets/sounds/ball-miss.mp3');
-const winSound = new Audio('assets/sounds/win.mp3');
-const backgroundMusic = new Audio('assets/sounds/background-music.mp3');
-backgroundMusic.loop = true;
-backgroundMusic.volume = 0.3; // Adjust volume as needed
-backgroundMusic.play();
-
-function keyDownHandler(e) {
-  if (e.key === 'Right' || e.key === 'ArrowRight') {
-    rightPressed = true;
-  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-    leftPressed = true;
-  }
-}
-
-function keyUpHandler(e) {
-  if (e.key === 'Right' || e.key === 'ArrowRight') {
-    rightPressed = false;
-  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-    leftPressed = false;
-  }
-}
-
-function mouseMoveHandler(e) {
-  const relativeX = e.clientX - canvas.offsetLeft;
-  if (relativeX > 0 && relativeX < canvas.width) {
-    paddleX = relativeX - paddleWidth / 2;
-  }
-}
-
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
-document.addEventListener('mousemove', mouseMoveHandler, false);
-
-function drawScore() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Score: ${score}`, 8, 20);
-}
-
-function drawLives() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
-}
-
-function drawBricks() {
-  for (let c = 0; c < brickColumnCount; c += 1) {
-    for (let r = 0; r < brickRowCount; r += 1) {
-      if (bricks[c][r].status === 1) {
-        const brick = bricks[c][r];
-        ctx.beginPath();
-        ctx.rect(brick.x, brick.y, brickWidth, brickHeight);
-        ctx.fillStyle = brickColors[r % brickColors.length];
-        ctx.fill();
-        ctx.closePath();
-      }
-    }
-  }
-}
-
-function drawBall() {
-  ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#FFD700';
-  ctx.fill();
-  ctx.closePath();
-}
-
-function drawPaddle() {
-  ctx.beginPath();
-  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = '#40E0D0';
-  ctx.fill();
-  ctx.closePath();
 }
 
 function collisionDetection() {
-  let bricksRemaining = 0;
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
       const b = bricks[c][r];
       if (b.status === 1) {
-        bricksRemaining += 1;
         if (
-          x + ballRadius > b.x
-          && x - ballRadius < b.x + brickWidth
-          && y + ballRadius > b.y
-          && y - ballRadius < b.y + brickHeight
+          ball.x > b.x
+          && ball.x < b.x + b.width
+          && ball.y > b.y
+          && ball.y < b.y + b.height
         ) {
-          const overlapX = Math.min(x + ballRadius - b.x, b.x + brickWidth - (x - ballRadius));
-          const overlapY = Math.min(y + ballRadius - b.y, b.y + brickHeight - (y - ballRadius));
-
-          if (overlapX > overlapY) {
-            dy = -dy; // Reflect vertically
-          } else {
-            dx = -dx; // Reflect horizontally
-          }
-
+          ball.dy = -ball.dy;
           b.status = 0;
-          score += brickPoints[r % brickPoints.length];
-          brickHitSound.play();
-
-          // Gradually increase speed after breaking bricks, up to maxSpeed
-          speed = Math.min(maxSpeed, baseSpeed + Math.floor(score / 100) * 0.5);
-          dx = (dx > 0 ? 1 : -1) * speed * Math.cos(Math.atan2(dy, dx));
-          dy = (dy > 0 ? 1 : -1) * speed * Math.sin(Math.atan2(dy, dx));
+          score.update(10);
         }
       }
     }
   }
-
-  if (bricksRemaining === 0) {
-    backgroundMusic.pause(); // Stop background music
-    winSound.play(); // Play win sound effect
-    const playAgain = confirm('YOU WIN! CONGRATULATIONS! Do you want to play again?');
-    if (playAgain) {
-      document.location.reload();
-    } else {
-      alert('Thank you for playing!');
-    }
-  }
-}
-
-function dynamicPaddleCollision() {
-  const paddleTop = canvas.height - paddleHeight;
-  const paddleBottom = paddleTop + paddleHeight;
-  const paddleLeft = paddleX;
-  const paddleRight = paddleX + paddleWidth;
-
-  // eslint-disable-next-line max-len
-  if (y + ballRadius >= paddleTop && y + ballRadius <= paddleBottom && x >= paddleLeft && x <= paddleRight) {
-    const relativeIntersectX = x - (paddleX + paddleWidth / 2);
-    const normalizedRelativeIntersectX = relativeIntersectX / (paddleWidth / 2);
-
-    if (Math.abs(normalizedRelativeIntersectX) < 0.2) {
-      // Center hit, reflect directly vertically
-      dy = -Math.abs(dy);
-    } else {
-      // Side hit, calculate bounce angle
-      // eslint-disable-next-line max-len
-      const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3); // Max bounce angle: 60 degrees
-      dx = speed * Math.cos(bounceAngle);
-      dy = -Math.abs(speed * Math.sin(bounceAngle));
-    }
-
-    paddleHitSound.play();
-  }
-}
-
-function drawBackground() {
-  // eslint-disable-next-line max-len
-  const gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, canvas.width);
-  gradient.addColorStop(0, '#8A2BE2');
-  gradient.addColorStop(1, '#000000');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function draw() {
-  drawBackground();
-  drawBricks();
-  drawBall();
-  drawPaddle();
-  drawScore();
-  drawLives();
+  background.render(ctx, canvas);
+
+  for (let c = 0; c < brickColumnCount; c += 1) {
+    for (let r = 0; r < brickRowCount; r += 1) {
+      bricks[c][r].render(ctx);
+    }
+  }
+
+  ball.render(ctx);
+  paddle.render(ctx);
+  score.render(ctx);
+  lives.render(ctx);
+
   collisionDetection();
-  dynamicPaddleCollision();
 
-  if (rightPressed) {
-    paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
-  } else if (leftPressed) {
-    paddleX = Math.max(paddleX - 7, 0);
+  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
+    ball.dx = -ball.dx;
   }
-
-  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-    dx = -dx;
-  }
-  if (y + dy < ballRadius) {
-    dy = -dy;
-  } else if (y + dy > canvas.height - ballRadius) {
-    if (x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy;
+  if (ball.y + ball.dy < ball.radius) {
+    ball.dy = -ball.dy;
+  } else if (ball.y + ball.dy > canvas.height - ball.radius) {
+    if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+      ball.dy = -ball.dy;
     } else {
-      ballMissSound.play(); // Play sound when ball hits the bottom
-      lives -= 1;
-      if (!lives) {
-        backgroundMusic.pause(); // Stop background music
-        gameOverSound.play();
-        const playAgain = confirm('GAME OVER. Do you want to play again?');
-        if (playAgain) {
-          document.location.reload();
-        } else {
-          alert('Thank you for playing!');
-          return;
-        }
+      lives.loseLife();
+      if (!lives.lives) {
+        alert('GAME OVER');
+        document.location.reload();
       } else {
-        x = canvas.width / 2;
-        y = canvas.height - 30;
-        const newAngle = (Math.random() * Math.PI) / 4 + Math.PI / 4;
-        dx = speed * Math.cos(newAngle);
-        dy = -speed * Math.sin(newAngle);
-        paddleX = (canvas.width - paddleWidth) / 2;
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height - 30;
+        ball.dx = 2;
+        ball.dy = -2;
+        paddle.x = (canvas.width - paddle.width) / 2;
       }
     }
   }
 
-  x += dx;
-  y += dy;
-
+  ball.move();
   requestAnimationFrame(draw);
 }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Right' || e.key === 'ArrowRight') {
+    paddle.x = Math.min(paddle.x + 7, canvas.width - paddle.width);
+  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+    paddle.x = Math.max(paddle.x - 7, 0);
+  }
+});
 
 draw();
