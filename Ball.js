@@ -16,20 +16,43 @@ export default class Ball {
   }
 
   increaseSpeed(score) {
-    const speedFactor = 1 + score * 0.001; // Gradual increase over time
+    const speedFactor = 1 + score * 0.001;
     const newSpeed = Math.min(this.maxSpeed, this.baseSpeed * speedFactor);
     const angle = Math.atan2(this.dy, this.dx);
     this.dx = newSpeed * Math.cos(angle);
     this.dy = newSpeed * Math.sin(angle);
   }
 
+  /**
+   * Improved paddle collision based on the previous procedural version
+   */
   bounceOffPaddle(paddle) {
-    const relativeIntersectX = this.x - (paddle.x + paddle.width / 2);
-    const normalizedRelativeIntersectX = relativeIntersectX / (paddle.width / 2);
-    const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3);
-    const speed = Math.sqrt(this.dx ** 2 + this.dy ** 2);
-    this.dx = speed * Math.cos(bounceAngle);
-    this.dy = -Math.abs(speed * Math.sin(bounceAngle));
+    const paddleTop = paddle.y;
+    const paddleBottom = paddle.y + paddle.height;
+    const paddleLeft = paddle.x;
+    const paddleRight = paddle.x + paddle.width;
+
+    if (
+      this.y + this.radius >= paddleTop &&
+      this.y + this.radius <= paddleBottom &&
+      this.x >= paddleLeft &&
+      this.x <= paddleRight
+    ) {
+      const relativeIntersectX = this.x - (paddle.x + paddle.width / 2);
+      const normalizedRelativeIntersectX = relativeIntersectX / (paddle.width / 2);
+
+      if (Math.abs(normalizedRelativeIntersectX) < 0.2) {
+        // Center hit → Reflect directly upwards
+        this.dy = -Math.abs(this.dy);
+      } else {
+        // Side hit → Adjust bounce angle
+        // eslint-disable-next-line max-len
+        const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3); // Max bounce angle: 60 degrees
+        const speed = Math.sqrt(this.dx ** 2 + this.dy ** 2);
+        this.dx = speed * Math.cos(bounceAngle);
+        this.dy = -Math.abs(speed * Math.sin(bounceAngle));
+      }
+    }
   }
 
   render(ctx) {

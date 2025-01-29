@@ -41,12 +41,16 @@ document.addEventListener('keyup', (e) => paddle.handleKeyUp(e));
 document.addEventListener('mousemove', (e) => paddle.handleMouseMove(e));
 
 function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Render all components
   background.render(ctx, canvas);
-  bricks.flat().forEach((brick) => brick.render(ctx));
-  ball.render(ctx);
   paddle.render(ctx);
+  ball.render(ctx);
   score.render(ctx);
   lives.render(ctx);
+  bricks.flat().forEach((brick) => brick.render(ctx));
+
   // Ball-wall collision detection
   if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
     ball.dx = -ball.dx; // Reverse horizontal direction
@@ -60,7 +64,7 @@ function gameLoop() {
   if (ball.y + ball.dy > canvas.height - ball.radius) {
     lives.loseLife();
     if (lives.lives === 0) {
-      alert('Game Over');
+      alert("Game Over");
       document.location.reload(); // Reset the game
     } else {
       // Reset ball and paddle
@@ -71,10 +75,15 @@ function gameLoop() {
       paddle.x = (canvas.width - paddle.width) / 2;
     }
   }
+
+  // Ball movement
+  ball.move();
+  paddle.move();
+
+  // Collision detection for bricks and paddle
   gameManager.collisionDetection();
   gameManager.checkGameOver();
-  paddle.move();
-  ball.move();
+
   requestAnimationFrame(gameLoop);
 }
 
