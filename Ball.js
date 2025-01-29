@@ -24,10 +24,11 @@ export default class Ball {
   }
 
   increaseSpeed(score) {
-    const speed = Math.min(this.maxSpeed, this.baseSpeed + Math.floor(score / 100) * 0.5);
+    const speedFactor = 1 + score * 0.001; // Gradual increase over time
+    const newSpeed = Math.min(this.maxSpeed, this.baseSpeed * speedFactor);
     const angle = Math.atan2(this.dy, this.dx);
-    this.dx = speed * Math.cos(angle);
-    this.dy = speed * Math.sin(angle);
+    this.dx = newSpeed * Math.cos(angle);
+    this.dy = newSpeed * Math.sin(angle);
   }
 
   bounceOffPaddle(paddle) {
