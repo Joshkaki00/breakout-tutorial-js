@@ -1,14 +1,14 @@
 export default class Paddle {
-  constructor(x, y, width, height, canvasWidth, color = '#40E0D0') {
+  constructor(x, y, width, height, canvas, color = '#40E0D0') {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.canvasWidth = canvasWidth;
+    this.canvas = canvas;
     this.speed = 7;
-    this.color = color;
     this.rightPressed = false;
     this.leftPressed = false;
+    this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
   }
 
   handleKeyDown(e) {
@@ -27,9 +27,16 @@ export default class Paddle {
     }
   }
 
+  handleMouseMove(e) {
+    const relativeX = e.clientX - this.canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < this.canvas.width) {
+      this.x = relativeX - this.width / 2;
+    }
+  }
+
   move() {
     if (this.rightPressed) {
-      this.x = Math.min(this.x + this.speed, this.canvasWidth - this.width);
+      this.x = Math.min(this.x + this.speed, this.canvas.width - this.width);
     } else if (this.leftPressed) {
       this.x = Math.max(this.x - this.speed, 0);
     }
@@ -37,7 +44,7 @@ export default class Paddle {
 
   render(ctx) {
     ctx.beginPath();
-    ctx.fillStyle = this.color;
+    ctx.rect(this.x, this.y, this.width, this.height);
     ctx.fillStyle = '#40E0D0';
     ctx.fill();
     ctx.closePath();
