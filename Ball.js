@@ -11,6 +11,7 @@ export default class Ball {
   }
 
   move(canvas) {
+    // Bounce off walls
     if (this.x + this.dx > canvas.width - this.radius || this.x + this.dx < this.radius) {
       this.dx = -this.dx;
     }
