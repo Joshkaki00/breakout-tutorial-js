@@ -23,7 +23,7 @@ export default class Ball {
   }
 
   increaseSpeed(score) {
-    const speedFactor = 1 + score * 0.001; // Gradual increase over time
+    const speedFactor = 1 + score * 0.010; // Gradual increase over time
     const newSpeed = Math.min(this.maxSpeed, this.baseSpeed * speedFactor);
     const angle = Math.atan2(this.dy, this.dx);
     this.dx = newSpeed * Math.cos(angle);
