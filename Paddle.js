@@ -6,6 +6,7 @@ export default class Paddle {
     this.height = height;
     this.canvasWidth = canvasWidth;
     this.speed = 7;
+    this.color = color;
     this.rightPressed = false;
     this.leftPressed = false;
   }
@@ -36,7 +37,7 @@ export default class Paddle {
 
   render(ctx) {
     ctx.beginPath();
-    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = this.color;
     ctx.fillStyle = '#40E0D0';
     ctx.fill();
     ctx.closePath();
