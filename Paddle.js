@@ -42,11 +42,9 @@ export default class Paddle {
     } else if (this.leftPressed) {
       this.x = Math.max(this.x - this.speed, 0);
     }
-    console.log(`Paddle Move: Current Position = ${this.x}`);
   }
 
   render(ctx) {
-    console.log(`Paddle Render: Position (${this.x}, ${this.y}), Size (${this.width}x${this.height})`);
     ctx.beginPath();
     ctx.rect(this.x, this.y, this.width, this.height);
     ctx.fillStyle = this.color;
