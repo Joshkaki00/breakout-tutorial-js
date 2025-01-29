@@ -16,8 +16,8 @@ export default class Ball {
   }
 
   increaseSpeed(score) {
-    let speed = Math.min(this.maxSpeed, this.baseSpeed + Math.floor(score / 100) * 0.5);
-    let angle = Math.atan2(this.dy, this.dx);
+    const speed = Math.min(this.maxSpeed, this.baseSpeed + Math.floor(score / 100) * 0.5);
+    const angle = Math.atan2(this.dy, this.dx);
     this.dx = speed * Math.cos(angle);
     this.dy = speed * Math.sin(angle);
   }
