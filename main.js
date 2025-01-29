@@ -59,9 +59,8 @@ function gameLoop() {
   // Ball hitting the bottom wall
   if (ball.y + ball.dy > canvas.height - ball.radius) {
     lives.loseLife();
-    console.log(`Ball hit bottom wall. Lives remaining: ${lives.lives}`);
     if (lives.lives === 0) {
-      alert("Game Over");
+      alert('Game Over');
       document.location.reload(); // Reset the game
     } else {
       // Reset ball and paddle
