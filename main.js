@@ -47,6 +47,31 @@ function gameLoop() {
   paddle.render(ctx);
   score.render(ctx);
   lives.render(ctx);
+  // Ball-wall collision detection
+  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
+    ball.dx = -ball.dx; // Reverse horizontal direction
+  }
+
+  if (ball.y + ball.dy < ball.radius) {
+    ball.dy = -ball.dy; // Reverse vertical direction
+  }
+
+  // Ball hitting the bottom wall
+  if (ball.y + ball.dy > canvas.height - ball.radius) {
+    lives.loseLife();
+    console.log(`Ball hit bottom wall. Lives remaining: ${lives.lives}`);
+    if (lives.lives === 0) {
+      alert("Game Over");
+      document.location.reload(); // Reset the game
+    } else {
+      // Reset ball and paddle
+      ball.x = canvas.width / 2;
+      ball.y = canvas.height - 30;
+      ball.dx = 2;
+      ball.dy = -2;
+      paddle.x = (canvas.width - paddle.width) / 2;
+    }
+  }
   gameManager.collisionDetection();
   gameManager.checkGameOver();
   paddle.move();
