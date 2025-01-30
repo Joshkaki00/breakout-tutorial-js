@@ -25,6 +25,7 @@ const brickOffsetLeft = 30;
 const brickWidth = (canvas.width - (brickOffsetLeft * 2) - (brickColumnCount - 1) * brickPadding) / brickColumnCount;
 const brickHeight = 20;
 
+// Initialize bricks
 // eslint-disable-next-line max-len
 const bricks = Array.from({ length: brickColumnCount }, (_, c) => Array.from({ length: brickRowCount }, (_, r) => new Brick(
   c * (brickWidth + brickPadding) + brickOffsetLeft,
@@ -36,14 +37,18 @@ const bricks = Array.from({ length: brickColumnCount }, (_, c) => Array.from({ l
 
 const gameManager = new GameManager(ball, paddle, bricks, score, lives, canvas);
 
+// Event Listeners for Paddle Movement
 document.addEventListener('keydown', (e) => paddle.handleKeyDown(e));
 document.addEventListener('keyup', (e) => paddle.handleKeyUp(e));
 document.addEventListener('mousemove', (e) => paddle.handleMouseMove(e));
 
+/**
+ * Main game loop
+ */
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Render all components
+  // Render game objects
   background.render(ctx, canvas);
   paddle.render(ctx);
   ball.render(ctx);
@@ -51,40 +56,30 @@ function gameLoop() {
   lives.render(ctx);
   bricks.flat().forEach((brick) => brick.render(ctx));
 
-  // Ball-wall collision detection
+  // Ball movement & wall collision
   if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
-    ball.dx = -ball.dx; // Reverse horizontal direction
+    ball.dx = -ball.dx;
   }
 
   if (ball.y + ball.dy < ball.radius) {
-    ball.dy = -ball.dy; // Reverse vertical direction
+    ball.dy = -ball.dy;
   }
 
-  // Ball hitting the bottom wall
-  if (ball.y + ball.dy > canvas.height - ball.radius) {
-    lives.loseLife();
-    if (lives.lives === 0) {
-      alert('Game Over');
-      document.location.reload(); // Reset the game
-    } else {
-      // Reset ball and paddle
-      ball.x = canvas.width / 2;
-      ball.y = canvas.height - 30;
-      ball.dx = 2;
-      ball.dy = -2;
-      paddle.x = (canvas.width - paddle.width) / 2;
-    }
-  }
+  // Ball hitting the bottom (check game over)
+  gameManager.checkGameOver();
 
-  // Ball movement
+  // Ball-Paddle Collision (Improved)
+  ball.bounceOffPaddle(paddle);
+
+  // Move ball and paddle
   ball.move();
   paddle.move();
 
-  // Collision detection for bricks and paddle
+  // Check for brick collisions
   gameManager.collisionDetection();
-  gameManager.checkGameOver();
 
   requestAnimationFrame(gameLoop);
 }
 
+// Start game loop
 gameLoop();
