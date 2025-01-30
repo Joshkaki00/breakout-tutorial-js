@@ -5,22 +5,25 @@ import Score from './Score.js';
 import Lives from './Lives.js';
 import Brick from './Brick.js';
 import GameManager from './GameManager.js';
+import SoundManager from './SoundManager.js';
 
 /* eslint-disable no-undef */
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 
-const ball = new Ball(canvas.width / 2, canvas.height - 30, 10, 2, -2, '#FFD700', 5, canvas);
+const ball = new Ball(canvas.width / 2, canvas.height - 30, 10, 2, -2, '#FFD700', 5);
 const paddle = new Paddle((canvas.width - 75) / 2, canvas.height - 10, 75, 10, canvas);
 const background = new Background('#8A2BE2', '#000000');
 const score = new Score(8, 20);
 const lives = new Lives(canvas.width - 65, 20);
+const sounds = new SoundManager();
 
 const brickRowCount = 5;
 const brickColumnCount = 8;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
+
 // eslint-disable-next-line max-len
 const brickWidth = (canvas.width - (brickOffsetLeft * 2) - (brickColumnCount - 1) * brickPadding) / brickColumnCount;
 const brickHeight = 20;
@@ -35,7 +38,7 @@ const bricks = Array.from({ length: brickColumnCount }, (_, c) => Array.from({ l
   ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4'][r % 5],
 )));
 
-const gameManager = new GameManager(ball, paddle, bricks, score, lives, canvas);
+const gameManager = new GameManager(ball, paddle, bricks, score, lives, canvas, sounds);
 
 // Event Listeners for Paddle Movement
 document.addEventListener('keydown', (e) => paddle.handleKeyDown(e));
@@ -69,7 +72,9 @@ function gameLoop() {
   gameManager.checkGameOver();
 
   // Ball-Paddle Collision (Improved)
-  ball.bounceOffPaddle(paddle);
+  if (ball.bounceOffPaddle(paddle)) {
+    sounds.play('paddleHit'); // Play paddle hit sound
+  }
 
   // Move ball and paddle
   ball.move();
@@ -77,6 +82,9 @@ function gameLoop() {
 
   // Check for brick collisions
   gameManager.collisionDetection();
+
+  // **Win Condition: Check if all bricks are broken**
+  gameManager.checkWinCondition();
 
   requestAnimationFrame(gameLoop);
 }

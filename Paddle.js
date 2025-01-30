@@ -32,7 +32,6 @@ export default class Paddle {
     const relativeX = e.clientX - this.canvas.offsetLeft;
     if (relativeX > 0 && relativeX < this.canvas.width) {
       this.x = relativeX - this.width / 2;
-      console.log(`Mouse Move: Paddle X Position = ${this.x}`);
     }
   }
 
