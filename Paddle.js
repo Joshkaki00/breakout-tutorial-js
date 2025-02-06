@@ -1,12 +1,10 @@
-export default class Paddle {
+import Sprite from './Sprite.js';
+
+export default class Paddle extends Sprite {
   constructor(x, y, width, height, canvas, color = '#40E0D0') {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+    super(x, y, width, height, color);
     this.canvas = canvas;
     this.speed = 7;
-    this.color = color;
     this.rightPressed = false;
     this.leftPressed = false;
     this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
@@ -41,13 +39,5 @@ export default class Paddle {
     } else if (this.leftPressed) {
       this.x = Math.max(this.x - this.speed, 0);
     }
-  }
-
-  render(ctx) {
-    ctx.beginPath();
-    ctx.rect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = this.color;
-    ctx.fill();
-    ctx.closePath();
   }
 }
