@@ -1,11 +1,11 @@
-export default class Ball {
+import Sprite from './Sprite.js';
+
+export default class Ball extends Sprite {
   constructor(x, y, radius, dx, dy, color = '#FFD700', maxSpeed = 5) {
-    this.x = x;
-    this.y = y;
+    super(x, y, radius * 2, radius * 2, color);
     this.radius = radius;
     this.dx = dx;
     this.dy = dy;
-    this.color = color;
     this.baseSpeed = Math.sqrt(dx ** 2 + dy ** 2);
     this.maxSpeed = maxSpeed;
   }
@@ -39,12 +39,9 @@ export default class Ball {
       const normalizedRelativeIntersectX = relativeIntersectX / (paddle.width / 2);
 
       if (Math.abs(normalizedRelativeIntersectX) < 0.2) {
-        // Center hit → Reflect directly upwards
         this.dy = -Math.abs(this.dy);
       } else {
-        // Side hit → Adjust bounce angle
-        // eslint-disable-next-line max-len
-        const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3); // Max bounce angle: 60 degrees
+        const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3);
         const speed = Math.sqrt(this.dx ** 2 + this.dy ** 2);
         this.dx = speed * Math.cos(bounceAngle);
         this.dy = -Math.abs(speed * Math.sin(bounceAngle));
