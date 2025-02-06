@@ -49,6 +49,7 @@ export default class GameManager {
           this.sounds.stopBackgroundMusic();
           this.sounds.play('gameOver');
           alert('GAME OVER');
+          // eslint-disable-next-line no-undef
           document.location.reload();
         } else {
           this.resetBall();
@@ -63,6 +64,7 @@ export default class GameManager {
       this.sounds.play('win');
       setTimeout(() => {
         alert('YOU WIN! CONGRATULATIONS!');
+        // eslint-disable-next-line no-undef
         document.location.reload();
       }, 500);
     }
