@@ -36,23 +36,12 @@ export default class GameManager {
     }
   }
 
-  renderPauseScreen(): void {
-    if (this.isPaused) {
-      this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.fillStyle = "#FFF";
-      this.ctx.font = "30px Arial";
-      this.ctx.textAlign = "center";
-      this.ctx.fillText("PAUSED", this.canvas.width / 2, this.canvas.height / 2);
-    }
-  }
-
   checkGameOver(): void {
     if (this.isPaused || this.isGameOver) return;
+
     if (this.ball.y + this.ball.dy > this.canvas.height - this.ball.radius) {
-      if (this.ball.x > this.paddle.x && this.ball.x < this.paddle.x + this.paddle.width) {
+      if (this.ball.bounceOffPaddle(this.paddle)) {
         this.sounds.play("paddleHit");
-        this.ball.dy = -this.ball.dy;
       } else {
         this.lives.loseLife();
         this.sounds.play("ballMiss");
@@ -76,14 +65,6 @@ export default class GameManager {
     this.ball.dy = -2;
   }
 
-  checkWinCondition(): void {
-    if (this.flatBricks.every(brick => !brick.status)) {
-      this.sounds.play("win");
-      alert("YOU WIN!");
-      this.isGameOver = true;
-    }
-  }
-
   collisionDetection(): void {
     let hitBrick = false;
     this.flatBricks.forEach((brick) => {
@@ -104,6 +85,14 @@ export default class GameManager {
     if (hitBrick) {
       this.ball.increaseSpeed(this.score.score);
       this.sounds.play("brickHit");
+    }
+  }
+
+  checkWinCondition(): void {
+    if (this.flatBricks.every(brick => !brick.status)) {
+      this.sounds.play("win");
+      alert("YOU WIN!");
+      this.isGameOver = true;
     }
   }
 }
