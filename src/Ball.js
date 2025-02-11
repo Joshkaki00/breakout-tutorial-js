@@ -1,4 +1,4 @@
-import Sprite from './Sprite.js';
+import Sprite from './sprite.js';
 
 export default class Ball extends Sprite {
   constructor(x, y, radius, dx, dy, color = '#FFD700', maxSpeed = 5) {
@@ -30,10 +30,10 @@ export default class Ball extends Sprite {
     const paddleRight = paddle.x + paddle.width;
 
     if (
-      this.y + this.radius >= paddleTop
-      && this.y + this.radius <= paddleBottom
-      && this.x >= paddleLeft
-      && this.x <= paddleRight
+      this.y + this.radius >= paddleTop &&
+      this.y + this.radius <= paddleBottom &&
+      this.x >= paddleLeft &&
+      this.x <= paddleRight
     ) {
       const relativeIntersectX = this.x - (paddle.x + paddle.width / 2);
       const normalizedRelativeIntersectX = relativeIntersectX / (paddle.width / 2);
@@ -46,7 +46,9 @@ export default class Ball extends Sprite {
         this.dx = speed * Math.cos(bounceAngle);
         this.dy = -Math.abs(speed * Math.sin(bounceAngle));
       }
+      return true; // Collision happened
     }
+    return false; // No collision
   }
 
   render(ctx) {
