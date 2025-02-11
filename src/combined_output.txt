@@ -1,0 +1,396 @@
+export default class Background {
+  constructor(color1, color2) {
+    this.color1 = color1;
+    this.color2 = color2;
+  }
+
+  render(ctx, canvas) {
+    const gradient = ctx.createRadialGradient(
+      canvas.width / 2,
+      canvas.height / 2,
+      50,
+      canvas.width / 2,
+      canvas.height / 2,
+      canvas.width,
+    );
+    gradient.addColorStop(0, this.color1);
+    gradient.addColorStop(1, this.color2);
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+}
+import Sprite from './sprite';
+
+export default class Ball extends Sprite {
+  constructor(x, y, radius, dx, dy, color = '#FFD700', maxSpeed = 5) {
+    super(x, y, radius * 2, radius * 2, color);
+    this.radius = radius;
+    this.dx = dx;
+    this.dy = dy;
+    this.baseSpeed = Math.sqrt(dx ** 2 + dy ** 2);
+    this.maxSpeed = maxSpeed;
+  }
+
+  move() {
+    this.x += this.dx;
+    this.y += this.dy;
+  }
+
+  increaseSpeed(score) {
+    const speedFactor = 1 + score * 0.001;
+    const newSpeed = Math.min(this.maxSpeed, this.baseSpeed * speedFactor);
+    const angle = Math.atan2(this.dy, this.dx);
+    this.dx = newSpeed * Math.cos(angle);
+    this.dy = newSpeed * Math.sin(angle);
+  }
+
+  bounceOffPaddle(paddle) {
+    const paddleTop = paddle.y;
+    const paddleBottom = paddle.y + paddle.height;
+    const paddleLeft = paddle.x;
+    const paddleRight = paddle.x + paddle.width;
+
+    if (
+      this.y + this.radius >= paddleTop
+      && this.y + this.radius <= paddleBottom
+      && this.x >= paddleLeft
+      && this.x <= paddleRight
+    ) {
+      const relativeIntersectX = this.x - (paddle.x + paddle.width / 2);
+      const normalizedRelativeIntersectX = relativeIntersectX / (paddle.width / 2);
+
+      if (Math.abs(normalizedRelativeIntersectX) < 0.2) {
+        this.dy = -Math.abs(this.dy);
+      } else {
+        const bounceAngle = normalizedRelativeIntersectX * (Math.PI / 3);
+        const speed = Math.sqrt(this.dx ** 2 + this.dy ** 2);
+        this.dx = speed * Math.cos(bounceAngle);
+        this.dy = -Math.abs(speed * Math.sin(bounceAngle));
+      }
+      return true; // Collision happened
+    }
+    return false; // No collision
+  }
+
+  render(ctx) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+import Sprite from './sprite';
+
+export default class Brick extends Sprite {
+  constructor(x, y, width, height, color, status = 1) {
+    super(x, y, width, height, color);
+    this.status = status;
+  }
+
+  render(ctx) {
+    if (this.status === 1) {
+      super.render(ctx);
+    }
+  }
+}
+// eslint-disable-next-line import/extensions
+import SoundManager from './SoundManager';
+
+export default class GameManager {
+  constructor(ball, paddle, bricks, score, lives, canvas) {
+    this.ball = ball;
+    this.paddle = paddle;
+    this.bricks = bricks;
+    this.score = score;
+    this.lives = lives;
+    this.canvas = canvas;
+    this.sounds = new SoundManager();
+    this.sounds.startBackgroundMusic();
+    this.flatBricks = this.bricks.flat(); // Optimized flattening
+    this.isGameOver = false;
+  }
+
+  collisionDetection() {
+    let hitBrick = false;
+    this.flatBricks.forEach((brick) => {
+      if (
+        brick.status === 1 &&
+        this.ball.x > brick.x &&
+        this.ball.x < brick.x + brick.width &&
+        this.ball.y > brick.y &&
+        this.ball.y < brick.y + brick.height
+      ) {
+        this.ball.dy = -this.ball.dy;
+        brick.status = 0;
+        this.score.update(10);
+        hitBrick = true;
+      }
+    });
+
+    if (hitBrick) {
+      this.ball.increaseSpeed(this.score.score);
+      this.sounds.play("brickHit");
+    }
+  }
+
+  checkGameOver() {
+    if (this.ball.y + this.ball.dy > this.canvas.height - this.ball.radius) {
+      if (this.ball.bounceOffPaddle(this.paddle)) {
+        this.sounds.play("paddleHit");
+      } else {
+        this.lives.loseLife();
+        this.sounds.play("ballMiss");
+
+        if (this.lives.lives === 0) {
+          this.sounds.stopBackgroundMusic();
+          this.sounds.play("gameOver");
+          this.isGameOver = true;
+          alert("GAME OVER");
+        } else {
+          this.resetBall();
+        }
+      }
+    }
+  }
+}
+export default class Lives {
+  constructor(x, y, color = '#0095DD', font = '16px Arial', lives = 3) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.font = font;
+    this.lives = lives;
+  }
+
+  loseLife() {
+    this.lives -= 1;
+  }
+
+  reset() {
+    this.lives = 3;
+  }
+
+  render(ctx) {
+    ctx.font = this.font;
+    ctx.fillStyle = this.color;
+    ctx.fillText(`Lives: ${this.lives}`, this.x, this.y);
+  }
+}
+import Sprite from './sprite';
+
+export default class Paddle extends Sprite {
+  constructor(x, y, width, height, canvas, color = '#40E0D0') {
+    super(x, y, width, height, color);
+    this.canvas = canvas;
+    this.speed = 7;
+    this.rightPressed = false;
+    this.leftPressed = false;
+    this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+  }
+
+  handleKeyDown(e) {
+    if (e.key === 'Right' || e.key === 'ArrowRight') {
+      this.rightPressed = true;
+    } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+      this.leftPressed = true;
+    }
+  }
+
+  handleKeyUp(e) {
+    if (e.key === 'Right' || e.key === 'ArrowRight') {
+      this.rightPressed = false;
+    } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+      this.leftPressed = false;
+    }
+  }
+
+  handleMouseMove(e) {
+    const relativeX = e.clientX - this.canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < this.canvas.width) {
+      this.x = relativeX - this.width / 2;
+    }
+  }
+
+  move() {
+    if (this.rightPressed) {
+      this.x = Math.min(this.x + this.speed, this.canvas.width - this.width);
+    } else if (this.leftPressed) {
+      this.x = Math.max(this.x - this.speed, 0);
+    }
+  }
+}
+export default class Score {
+  constructor(x, y, color = '#0095DD', font = '16px Arial') {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.font = font;
+    this.score = 0;
+  }
+
+  update(points) {
+    this.score += points;
+  }
+
+  reset() {
+    this.score = 0;
+  }
+
+  render(ctx) {
+    ctx.font = this.font;
+    ctx.fillStyle = this.color;
+    ctx.fillText(`Score: ${this.score}`, this.x, this.y);
+  }
+}
+export default class SoundManager {
+  constructor() {
+    this.sounds = {
+      brickHit: new Audio('assets/sounds/brick-hit.mp3'),
+      paddleHit: new Audio('assets/sounds/paddle-hit.mp3'),
+      gameOver: new Audio('assets/sounds/game-over.mp3'),
+      ballMiss: new Audio('assets/sounds/ball-miss.mp3'),
+      win: new Audio('assets/sounds/win.mp3'),
+      backgroundMusic: new Audio('assets/sounds/background-music.mp3'),
+    };
+    this.sounds.backgroundMusic.loop = true;
+    this.sounds.backgroundMusic.volume = 0.3;
+  }
+
+  play(name) {
+    if (this.sounds[name]) {
+      this.sounds[name].play();
+    }
+  }
+
+  startBackgroundMusic() {
+    this.sounds.backgroundMusic.play();
+  }
+
+  stopBackgroundMusic() {
+    this.sounds.backgroundMusic.pause();
+  }
+}
+import Ball from './Ball';
+import Paddle from './Paddle';
+import Background from './Background';
+import Score from './Score';
+import Lives from './Lives';
+import Brick from './Brick';
+import GameManager from './GameManager';
+import SoundManager from './SoundManager';
+
+/* eslint-disable no-undef */
+export const canvas = document.getElementById('myCanvas');
+export const ctx = canvas.getContext('2d');
+
+export const ball = new Ball(canvas.width / 2, canvas.height - 30, 10, 2, -2, '#FFD700', 5);
+export const paddle = new Paddle((canvas.width - 75) / 2, canvas.height - 10, 75, 10, canvas);
+export const background = new Background('#8A2BE2', '#000000');
+export const score = new Score(8, 20);
+export const lives = new Lives(canvas.width - 65, 20);
+export const sounds = new SoundManager();
+
+export const brickRowCount = 5;
+export const brickColumnCount = 8;
+export const brickPadding = 10;
+export const brickOffsetTop = 30;
+export const brickOffsetLeft = 30;
+
+// eslint-disable-next-line max-len
+export const brickWidth = (canvas.width - (brickOffsetLeft * 2) - (brickColumnCount - 1) * brickPadding) / brickColumnCount;
+export const brickHeight = 20;
+
+// Initialize bricks
+// eslint-disable-next-line max-len
+export const bricks = Array.from({ length: brickColumnCount }, (_, c) => Array.from({ length: brickRowCount }, (_, r) => new Brick(
+  c * (brickWidth + brickPadding) + brickOffsetLeft,
+  r * (brickHeight + brickPadding) + brickOffsetTop,
+  brickWidth,
+  brickHeight,
+  ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4'][r % 5],
+)));
+
+export const gameManager = new GameManager(ball, paddle, bricks, score, lives, canvas, sounds);
+import {
+  canvas,
+  ctx,
+  ball,
+  paddle,
+  background,
+  score,
+  lives,
+  sounds,
+  bricks,
+  gameManager
+} from './constants';
+
+// Event Listeners for Paddle Movement
+document.addEventListener('keydown', (e) => paddle.handleKeyDown(e));
+document.addEventListener('keyup', (e) => paddle.handleKeyUp(e));
+document.addEventListener('mousemove', (e) => paddle.handleMouseMove(e));
+
+/**
+ * Main game loop
+ */
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Render game objects
+  background.render(ctx, canvas);
+  paddle.render(ctx);
+  ball.render(ctx);
+  score.render(ctx);
+  lives.render(ctx);
+  bricks.flat().forEach((brick) => brick.render(ctx));
+
+  // Ball movement & wall collision
+  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
+    ball.dx = -ball.dx;
+  }
+
+  if (ball.y + ball.dy < ball.radius) {
+    ball.dy = -ball.dy;
+  }
+
+  // Ball hitting the bottom (check game over)
+  gameManager.checkGameOver();
+
+  // Ball-Paddle Collision (Improved)
+  if (ball.bounceOffPaddle(paddle)) {
+    sounds.play('paddleHit'); // Play paddle hit sound
+  }
+
+  // Move ball and paddle
+  ball.move();
+  paddle.move();
+
+  // Check for brick collisions
+  gameManager.collisionDetection();
+
+  // **Win Condition: Check if all bricks are broken**
+  gameManager.checkWinCondition();
+
+  requestAnimationFrame(gameLoop);
+}
+
+// Start game loop
+gameLoop();
+export default class Sprite {
+  constructor(x, y, width, height, color) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.color = color;
+  }
+
+  render(ctx) {
+    ctx.beginPath();
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+}

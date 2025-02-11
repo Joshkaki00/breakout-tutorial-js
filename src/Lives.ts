@@ -1,21 +1,21 @@
 export default class Lives {
-  constructor(x, y, color = '#0095DD', font = '16px Arial', lives = 3) {
-    this.x = x;
-    this.y = y;
-    this.color = color;
-    this.font = font;
-    this.lives = lives;
-  }
+  constructor(
+    public x: number,
+    public y: number,
+    public color: string = "#0095DD",
+    public font: string = "16px Arial",
+    public lives: number = 3
+  ) {}
 
-  loseLife() {
+  loseLife(): void {
     this.lives -= 1;
   }
 
-  reset() {
+  reset(): void {
     this.lives = 3;
   }
 
-  render(ctx) {
+  render(ctx: CanvasRenderingContext2D): void {
     ctx.font = this.font;
     ctx.fillStyle = this.color;
     ctx.fillText(`Lives: ${this.lives}`, this.x, this.y);

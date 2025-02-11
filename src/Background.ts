@@ -1,17 +1,14 @@
 export default class Background {
-  constructor(color1, color2) {
-    this.color1 = color1;
-    this.color2 = color2;
-  }
+  constructor(private color1: string, private color2: string) {}
 
-  render(ctx, canvas) {
+  render(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
     const gradient = ctx.createRadialGradient(
       canvas.width / 2,
       canvas.height / 2,
       50,
       canvas.width / 2,
       canvas.height / 2,
-      canvas.width,
+      canvas.width
     );
     gradient.addColorStop(0, this.color1);
     gradient.addColorStop(1, this.color2);

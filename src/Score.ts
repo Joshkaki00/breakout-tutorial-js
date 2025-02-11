@@ -1,21 +1,21 @@
 export default class Score {
-  constructor(x, y, color = '#0095DD', font = '16px Arial') {
-    this.x = x;
-    this.y = y;
-    this.color = color;
-    this.font = font;
-    this.score = 0;
-  }
+  constructor(
+    public x: number,
+    public y: number,
+    public color: string = "#0095DD",
+    public font: string = "16px Arial",
+    public score: number = 0
+  ) {}
 
-  update(points) {
+  update(points: number): void {
     this.score += points;
   }
 
-  reset() {
+  reset(): void {
     this.score = 0;
   }
 
-  render(ctx) {
+  render(ctx: CanvasRenderingContext2D): void {
     ctx.font = this.font;
     ctx.fillStyle = this.color;
     ctx.fillText(`Score: ${this.score}`, this.x, this.y);
