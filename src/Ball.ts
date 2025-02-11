@@ -1,4 +1,4 @@
-import Sprite from './sprite.js';
+import Sprite from './sprite';
 
 export default class Ball extends Sprite {
   constructor(x, y, radius, dx, dy, color = '#FFD700', maxSpeed = 5) {

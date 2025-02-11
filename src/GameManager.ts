@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/extensions
-import SoundManager from './SoundManager.js';
+import SoundManager from './SoundManager';
 
 export default class GameManager {
   constructor(ball, paddle, bricks, score, lives, canvas) {

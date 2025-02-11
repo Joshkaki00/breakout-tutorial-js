@@ -9,7 +9,7 @@ import {
   sounds,
   bricks,
   gameManager
-} from './constants.js';
+} from './constants';
 
 // Event Listeners for Paddle Movement
 document.addEventListener('keydown', (e) => paddle.handleKeyDown(e));

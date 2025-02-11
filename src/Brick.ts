@@ -1,4 +1,4 @@
-import Sprite from './sprite.js';
+import Sprite from './sprite';
 
 export default class Brick extends Sprite {
   constructor(x, y, width, height, color, status = 1) {

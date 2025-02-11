@@ -1,11 +1,11 @@
-import Ball from './Ball.js';
-import Paddle from './Paddle.js';
-import Background from './Background.js';
-import Score from './Score.js';
-import Lives from './Lives.js';
-import Brick from './Brick.js';
-import GameManager from './GameManager.js';
-import SoundManager from './SoundManager.js';
+import Ball from './Ball';
+import Paddle from './Paddle';
+import Background from './Background';
+import Score from './Score';
+import Lives from './Lives';
+import Brick from './Brick';
+import GameManager from './GameManager';
+import SoundManager from './SoundManager';
 
 /* eslint-disable no-undef */
 export const canvas = document.getElementById('myCanvas');
