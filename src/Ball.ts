@@ -1,39 +1,55 @@
 import Sprite from "./sprite";
 
-export default class Ball extends Sprite {
-  radius: number;
-  dx: number;
-  dy: number;
-  baseSpeed: number;
-  maxSpeed: number;
+export default class Paddle extends Sprite {
+  private canvas: HTMLCanvasElement;
+  private speed: number = 7;
+  private rightPressed: boolean = false;
+  private leftPressed: boolean = false;
 
   constructor(
     x: number,
     y: number,
-    radius: number,
-    dx: number,
-    dy: number,
-    color = "#FFD700",
-    maxSpeed = 5
+    width: number,
+    height: number,
+    canvas: HTMLCanvasElement,
+    color: string = "#40E0D0"
   ) {
-    super(x, y, radius * 2, radius * 2, color);
-    this.radius = radius;
-    this.dx = dx;
-    this.dy = dy;
-    this.baseSpeed = Math.sqrt(dx ** 2 + dy ** 2);
-    this.maxSpeed = maxSpeed;
+    super(x, y, width, height, color);
+    this.canvas = canvas;
+
+    document.addEventListener("keydown", (e) => this.handleKeyDown(e));
+    document.addEventListener("keyup", (e) => this.handleKeyUp(e));
+    this.canvas.addEventListener("mousemove", (e) => this.handleMouseMove(e));
+  }
+
+  private handleKeyDown(e: KeyboardEvent): void {
+    if (e.key === "Right" || e.key === "ArrowRight") {
+      this.rightPressed = true;
+    } else if (e.key === "Left" || e.key === "ArrowLeft") {
+      this.leftPressed = true;
+    }
+  }
+
+  private handleKeyUp(e: KeyboardEvent): void {
+    if (e.key === "Right" || e.key === "ArrowRight") {
+      this.rightPressed = false;
+    } else if (e.key === "Left" || e.key === "ArrowLeft") {
+      this.leftPressed = false;
+    }
+  }
+
+  private handleMouseMove(e: MouseEvent): void {
+    const relativeX = e.clientX - this.canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < this.canvas.width) {
+      this.x = relativeX - this.width / 2;
+    }
   }
 
   move(): void {
-    this.x += this.dx;
-    this.y += this.dy;
-  }
-
-  increaseSpeed(score: number): void {
-    const speedFactor = 1 + score * 0.001;
-    const newSpeed = Math.min(this.maxSpeed, this.baseSpeed * speedFactor);
-    const angle = Math.atan2(this.dy, this.dx);
-    this.dx = newSpeed * Math.cos(angle);
-    this.dy = newSpeed * Math.sin(angle);
+    if (this.rightPressed) {
+      this.x = Math.min(this.x + this.speed, this.canvas.width - this.width);
+    } else if (this.leftPressed) {
+      this.x = Math.max(this.x - this.speed, 0);
+    }
   }
 }
