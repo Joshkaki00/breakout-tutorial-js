@@ -1,4 +1,4 @@
-import Sprite from './sprite';
+import Sprite from "./sprite";
 
 export default class Paddle extends Sprite {
   private canvas: HTMLCanvasElement;
