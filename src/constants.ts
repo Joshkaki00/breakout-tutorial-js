@@ -38,4 +38,4 @@ export const bricks = Array.from({ length: brickColumnCount }, (_, c) => Array.f
   ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF69B4'][r % 5],
 )));
 
-export const gameManager = new GameManager(ball, paddle, bricks, score, lives, canvas, sounds);
+export const gameManager = new GameManager(ball, paddle, bricks, score, lives, sounds, canvas, ctx);

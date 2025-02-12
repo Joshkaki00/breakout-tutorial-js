@@ -1,4 +1,5 @@
 import Sprite from "./sprite";
+import Paddle from "./Paddle"; // Adjust the import path as necessary
 
 export default class Ball extends Sprite {
   radius: number;
