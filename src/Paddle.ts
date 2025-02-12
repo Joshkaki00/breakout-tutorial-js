@@ -22,7 +22,7 @@ export default class Paddle extends Sprite {
     this.canvas.addEventListener("mousemove", (e) => this.handleMouseMove(e));
   }
 
-  private handleKeyDown(e: KeyboardEvent): void {
+  public handleKeyDown(e: KeyboardEvent): void {
     if (e.key === "Right" || e.key === "ArrowRight") {
       this.rightPressed = true;
     } else if (e.key === "Left" || e.key === "ArrowLeft") {
@@ -30,7 +30,7 @@ export default class Paddle extends Sprite {
     }
   }
 
-  private handleKeyUp(e: KeyboardEvent): void {
+  public handleKeyUp(e: KeyboardEvent): void {
     if (e.key === "Right" || e.key === "ArrowRight") {
       this.rightPressed = false;
     } else if (e.key === "Left" || e.key === "ArrowLeft") {
@@ -38,7 +38,7 @@ export default class Paddle extends Sprite {
     }
   }
 
-  private handleMouseMove(e: MouseEvent): void {
+  public handleMouseMove(e: MouseEvent): void {
     const relativeX = e.clientX - this.canvas.offsetLeft;
     if (relativeX > 0 && relativeX < this.canvas.width) {
       this.x = relativeX - this.width / 2;

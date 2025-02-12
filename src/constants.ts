@@ -8,7 +8,7 @@ import GameManager from './GameManager';
 import SoundManager from './SoundManager';
 
 /* eslint-disable no-undef */
-export const canvas = document.getElementById('myCanvas');
+export const canvas = document.getElementById("myCanvas") as HTMLCanvasElement;
 export const ctx = canvas.getContext('2d');
 
 export const ball = new Ball(canvas.width / 2, canvas.height - 30, 10, 2, -2, '#FFD700', 5);

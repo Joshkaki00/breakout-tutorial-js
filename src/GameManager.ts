@@ -95,4 +95,18 @@ export default class GameManager {
       this.isGameOver = true;
     }
   }
+
+  loseLife(): void {
+    this.lives.loseLife();
+  }
+
+  reset(): void {
+    this.lives.reset();
+  }
+
+  render(): void {
+    this.ctx.font = "16px Arial";
+    this.ctx.fillStyle = "#0095DD";
+    this.ctx.fillText(`Lives: ${this.lives.lives}`, this.canvas.width - 65, 20);
+  }
 }
